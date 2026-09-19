@@ -1,0 +1,12 @@
+.env
+node_modules
+dist
+.output
+.vercel
+screenshots
+artifacts
+attachments
+.grok
+.project_id
+.node_modules.lock
+*.log

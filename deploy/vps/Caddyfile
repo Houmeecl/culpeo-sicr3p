@@ -1,0 +1,7 @@
+# culpeo.sicr3p.cl — Caddy saca el certificado solo.
+# Culpeo (micrófono) necesita HTTPS.
+
+culpeo.sicr3p.cl {
+	encode gzip
+	reverse_proxy 127.0.0.1:3000
+}

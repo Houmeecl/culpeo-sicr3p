@@ -1,0 +1,18 @@
+[Unit]
+Description=Culpeo — Proveedor Regional
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/culpeo
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=3000
+EnvironmentFile=-/etc/culpeo/env
+ExecStart=/usr/bin/node /opt/culpeo/scripts/vps-start.mjs
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+# Copia a /etc/culpeo/env en el VPS. No subas este archivo con secretos.
+XAI_API_KEY=
+AMPLITUDE_AI_API_KEY=01f783f9ef50ee62c9502af8e69e37af
+VITE_AMPLITUDE_API_KEY=01f783f9ef50ee62c9502af8e69e37af
