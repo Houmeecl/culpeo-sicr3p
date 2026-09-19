@@ -4,7 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=www-data
+User=culpeo
+Group=culpeo
 WorkingDirectory=/opt/culpeo
 Environment=NODE_ENV=production
 Environment=HOST=127.0.0.1
@@ -13,6 +14,7 @@ EnvironmentFile=-/etc/culpeo/env
 ExecStart=/usr/bin/node /opt/culpeo/scripts/vps-start.mjs
 Restart=always
 RestartSec=3
+NoNewPrivileges=true
 
 [Install]
 WantedBy=multi-user.target

@@ -1,0 +1,21 @@
+Culpeo — paquete VPS oficial (Proveedor Regional)
+Dominio: culpeo.sicr3p.cl
+QR: https://culpeo.sicr3p.cl/seleccion
+
+Como root en el VPS:
+
+  curl -fsSL https://raw.githubusercontent.com/Houmeecl/culpeo-sicr3p/main/deploy/vps/install.sh | sh
+
+Luego:
+
+  nano /etc/culpeo/env
+
+Pon:
+
+  XAI_API_KEY=xai-tu_clave
+
+(la sacas en https://console.x.ai/team/default/api-keys)
+
+  systemctl restart culpeo
+
+Amplitude ya va incluido. No hace falta otra clave para la voz.
