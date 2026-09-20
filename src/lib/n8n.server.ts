@@ -13,6 +13,7 @@ export type N8nReply = {
   audioMime?: string;
   faena?: Faena;
   next?: "incorporar";
+  memory?: string;
 };
 
 function asFaena(value: unknown): Faena | undefined {
@@ -47,6 +48,8 @@ export async function n8nConverse(
       userText,
       history: input.history,
       systemPrompt: SYSTEM_PROMPT,
+      memoryKey: input.memoryKey,
+      memory: input.memory,
       audioBase64: input.mode === "voice" ? input.audioBase64 : undefined,
       mimeType: input.mimeType,
     }),
@@ -66,6 +69,7 @@ export async function n8nConverse(
     audioMime?: string;
     faena?: unknown;
     next?: unknown;
+    memory?: string;
   };
 
   const assistantText = (
@@ -83,5 +87,6 @@ export async function n8nConverse(
     audioMime: body.audioMime,
     faena: asFaena(body.faena),
     next: body.next === "incorporar" ? "incorporar" : undefined,
+    memory: typeof body.memory === "string" ? body.memory.trim().slice(0, 1200) : undefined,
   };
 }

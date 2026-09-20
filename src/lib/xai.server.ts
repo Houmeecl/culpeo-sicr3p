@@ -38,6 +38,8 @@ export type ConverseInput = {
   origen?: "seleccion" | "embed";
   empresa?: string;
   sessionId?: string;
+  memoryKey?: string;
+  memory?: string;
 };
 
 export type Faena = [boolean, boolean, boolean, boolean, boolean];
@@ -51,6 +53,7 @@ export type ConverseOk = {
   next?: "incorporar";
   faena?: Faena;
   speech?: "server" | "browser";
+  memory?: string;
 };
 
 export type ConverseErr = {
@@ -329,6 +332,7 @@ export async function runConversation(
   let n8nAudio: { audioBase64?: string; audioMime?: string } = {};
   let n8nFaena: Faena | undefined;
   let n8nNext: "incorporar" | undefined;
+  let n8nMemory: string | undefined;
 
   try {
     if (hasN8n) {
@@ -342,6 +346,7 @@ export async function runConversation(
         };
         n8nFaena = viaN8n.faena;
         n8nNext = viaN8n.next;
+        n8nMemory = viaN8n.memory;
       }
     }
 
@@ -431,6 +436,7 @@ export async function runConversation(
     next: n8nNext ?? marked.next,
     faena: n8nFaena ?? marked.faena,
     speech,
+    memory: n8nMemory,
   };
 
   if (n8nAudio.audioBase64) {

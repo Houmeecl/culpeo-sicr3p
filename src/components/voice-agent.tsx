@@ -34,6 +34,18 @@ function FaenaTrail({ faena }: { faena: Faena }) {
 const SILENT_WAV =
   "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
 
+const MEMORY_KEY = "culpeo_mk";
+const MEMORY_NOTE = "culpeo_mem";
+
+function visitorMemoryKey() {
+  if (typeof window === "undefined") return "";
+  const existing = window.localStorage.getItem(MEMORY_KEY);
+  if (existing) return existing;
+  const next = crypto.randomUUID();
+  window.localStorage.setItem(MEMORY_KEY, next);
+  return next;
+}
+
 function pickRecorderMime() {
   const candidates = [
     "audio/webm;codecs=opus",
@@ -372,6 +384,8 @@ export function VoiceAgent({
           origen,
           empresa,
           sessionId: sessionIdRef.current,
+          memoryKey: visitorMemoryKey(),
+          memory: window.localStorage.getItem(MEMORY_NOTE) || undefined,
         },
       });
 
@@ -402,6 +416,9 @@ export function VoiceAgent({
         setFaena((prev) => mergeFaena(prev, result.faena));
       }
       if (result.speech) speechRef.current = result.speech;
+      if (result.memory) {
+        window.localStorage.setItem(MEMORY_NOTE, result.memory);
+      }
 
       if (result.audioBase64 && !mutedRef.current) {
         busyRef.current = false;

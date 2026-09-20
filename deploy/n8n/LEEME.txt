@@ -1,18 +1,20 @@
-Culpeo + n8n + LLM (sin pagar xAI)
+Culpeo + n8n = agente que aprende (como learning agents)
 
-1. En n8n: Importar deploy/n8n/culpeo-llm.json
-2. Variables de n8n:
-   CULPEO_LLM_URL    ej. https://api.groq.com/openai/v1/chat/completions
-   CULPEO_LLM_MODEL  ej. llama-3.3-70b-versatile
-   Header Auth: Authorization = Bearer TU_CLAVE_DEL_LLM
-3. Activar el workflow. Copia la URL del Webhook (Production).
-4. En el VPS, /etc/culpeo/env:
+Importa culpeo-learning.json (reemplaza el workflow simple).
 
-   N8N_WEBHOOK_URL=https://tu-n8n/webhook/culpeo
-   N8N_WEBHOOK_SECRET=opcional
+Qué hace:
+1. Recuerda al mismo visitante (QR / mismo teléfono)
+2. Guarda un playbook de cierres que funcionaron (sin nombres ni RUT)
+3. En la próxima visita retoma: "la vez pasada quedamos en Calama"
 
-   systemctl restart culpeo
+Variables n8n:
+  CULPEO_LLM_URL
+  CULPEO_LLM_MODEL
+  Header Auth: Bearer …
 
-Culpeo manda systemPrompt + historial + lo que dijo la persona.
-n8n responde { "assistantText": "..." }.
-Sin xAI, el micrófono y la voz van en el navegador (Chrome / Safari).
+VPS /etc/culpeo/env:
+  N8N_WEBHOOK_URL=https://tu-n8n/webhook/culpeo
+
+  systemctl restart culpeo
+
+Sin xAI, el micrófono y la voz van en el navegador.

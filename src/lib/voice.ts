@@ -40,6 +40,10 @@ function parseInput(input: unknown): ConverseInput {
       typeof data.empresa === "string" ? data.empresa.trim().slice(0, 80) : undefined,
     sessionId:
       typeof data.sessionId === "string" ? data.sessionId.trim().slice(0, 80) : undefined,
+    memoryKey:
+      typeof data.memoryKey === "string" ? data.memoryKey.trim().slice(0, 80) : undefined,
+    memory:
+      typeof data.memory === "string" ? data.memory.trim().slice(0, 1200) : undefined,
   };
 }
 

@@ -1,0 +1,80 @@
+{
+  "name": "Culpeo Learning Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "culpeo",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "culpeo"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $input.first().json.body || $input.first().json;\nconst store = $getWorkflowStaticData('global');\nstore.visitors = store.visitors || {};\nstore.playbook = store.playbook || [];\nconst key = b.memoryKey || b.sessionId || 'anon';\nconst visitor = store.visitors[key] || { summary: b.memory || '', turns: 0, lastAt: null };\nconst playbook = (store.playbook || []).slice(-12).map(p => `- ${p.note}`).join('\\n');\nconst extra = [];\nif (visitor.summary) extra.push('MEMORIA DEL VISITANTE:\\n' + visitor.summary);\nif (playbook) extra.push('PLAYBOOK (otras faenas, sin nombres):\\n' + playbook);\nconst system = [b.systemPrompt || 'Eres Culpeo.', extra.join('\\n\\n')].filter(Boolean).join('\\n\\n');\nconst history = Array.isArray(b.history) ? b.history : [];\nconst messages = [{ role: 'system', content: system }].concat(history.map(m => ({ role: m.role, content: m.content })));\nif (b.userText) messages.push({ role: 'user', content: b.userText });\nif (!b.userText && b.mode === 'greet') messages.push({ role: 'user', content: '(inicio: saluda y pide permiso para grabar)' });\nreturn [{ json: { messages, key, visitor, userText: b.userText || '', mode: b.mode } }];"
+      },
+      "id": "mem",
+      "name": "Memoria + playbook",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.CULPEO_LLM_URL }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "Content-Type", "value": "application/json" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"{{ $env.CULPEO_LLM_MODEL }}\",\n  \"temperature\": 0.4,\n  \"max_tokens\": 320,\n  \"messages\": {{ JSON.stringify($json.messages) }}\n}",
+        "options": {}
+      },
+      "id": "llm",
+      "name": "LLM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.choices?.[0]?.message?.content || $input.first().json.output || '';\nconst text = String(raw).trim();\nconst prev = $('Memoria + playbook').first().json;\nconst store = $getWorkflowStaticData('global');\nstore.visitors = store.visitors || {};\nstore.playbook = store.playbook || [];\nconst summary = [prev.visitor.summary, prev.userText, text].filter(Boolean).join(' | ').slice(0, 900);\nstore.visitors[prev.key] = { summary, turns: (prev.visitor.turns || 0) + 1, lastAt: Date.now() };\nif (/\\[\\[REGISTRO\\]\\]/i.test(text)) {\n  store.playbook.push({ note: 'Cierre a registro funcionó. No guardar nombres.', at: Date.now() });\n  store.playbook = store.playbook.slice(-40);\n}\nreturn [{ json: { assistantText: text, memory: summary } }];"
+      },
+      "id": "save",
+      "name": "Guardar aprendizaje",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "resp",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [960, 0]
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Memoria + playbook", "type": "main", "index": 0 }]] },
+    "Memoria + playbook": { "main": [[{ "node": "LLM", "type": "main", "index": 0 }]] },
+    "LLM": { "main": [[{ "node": "Guardar aprendizaje", "type": "main", "index": 0 }]] },
+    "Guardar aprendizaje": { "main": [[{ "node": "Respond", "type": "main", "index": 0 }]] }
+  },
+  "active": true,
+  "settings": { "executionOrder": "v1" }
+}
