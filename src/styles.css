@@ -474,6 +474,57 @@
   }
 }
 
+.faena-trail {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0;
+  padding: 8px 12px;
+  list-style: none;
+}
+
+.faena-lamp {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--color-sand);
+  box-shadow: 0 0 0 1px var(--color-line);
+  transition:
+    background 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out),
+    transform 220ms var(--ease-out);
+}
+
+.faena-lamp[data-on="true"] {
+  background: var(--color-copper);
+  box-shadow:
+    0 0 0 1px var(--color-copper-deep),
+    0 0 12px rgb(196 120 74 / 0.55);
+}
+
+.faena-lamp[data-next="true"] {
+  transform: scale(1.15);
+  animation: faena-pulse 1.6s var(--ease-out) infinite;
+}
+
+@keyframes faena-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px var(--color-copper);
+    opacity: 0.7;
+  }
+  50% {
+    box-shadow: 0 0 10px rgb(196 120 74 / 0.45);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faena-lamp[data-next="true"] {
+    animation: none;
+  }
+}
+
 @media print {
   header,
   footer,

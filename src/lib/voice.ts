@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
-import type { ChatTurn, ConverseInput, ConverseResult } from "./xai.server";
+import type { ChatTurn, ConverseInput, ConverseResult, Faena } from "./xai.server";
 
-export type { ChatTurn, ConverseInput, ConverseResult };
+export type { ChatTurn, ConverseInput, ConverseResult, Faena };
 
 function parseInput(input: unknown): ConverseInput {
   if (!input || typeof input !== "object") {

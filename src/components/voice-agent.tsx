@@ -3,11 +3,33 @@ import { useNavigate } from "@tanstack/react-router";
 import { Volume2, VolumeX } from "lucide-react";
 import { LogoMark } from "@/components/brand-mark";
 import { Mascot } from "@/components/mascot";
-import { converse, type ChatTurn } from "@/lib/voice";
+import { converse, type ChatTurn, type Faena } from "@/lib/voice";
 import { cn } from "@/lib/utils";
 
 type AgentStatus = "idle" | "listening" | "thinking" | "speaking" | "error";
 type Layout = "page" | "embed";
+
+function mergeFaena(prev: Faena, next?: Faena): Faena {
+  if (!next) return prev;
+  return prev.map((bit, i) => bit || Boolean(next[i])) as Faena;
+}
+
+function FaenaTrail({ faena }: { faena: Faena }) {
+  const lit = faena.filter(Boolean).length;
+  const current = faena.findIndex((bit) => !bit);
+  return (
+    <ol className="faena-trail" aria-label={`Diagnóstico: ${lit} de 5 hitos`}>
+      {faena.map((on, i) => (
+        <li
+          key={i}
+          className="faena-lamp"
+          data-on={on ? "true" : "false"}
+          data-next={!on && current === i ? "true" : "false"}
+        />
+      ))}
+    </ol>
+  );
+}
 
 const SILENT_WAV =
   "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
@@ -74,6 +96,7 @@ export function VoiceAgent({
   const navigate = useNavigate();
   const [status, setStatus] = useState<AgentStatus>("idle");
   const [muted, setMuted] = useState(false);
+  const [faena, setFaena] = useState<Faena>([false, false, false, false, false]);
 
   const historyRef = useRef<ChatTurn[]>([]);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -368,6 +391,9 @@ export function VoiceAgent({
       if (result.next === "incorporar") {
         pendingNextRef.current = "incorporar";
       }
+      if (result.faena) {
+        setFaena((prev) => mergeFaena(prev, result.faena));
+      }
 
       if (result.audioBase64 && !mutedRef.current) {
         busyRef.current = false;
@@ -583,6 +609,7 @@ export function VoiceAgent({
     liveRef.current = true;
     sessionIdRef.current = crypto.randomUUID();
     historyRef.current = [];
+    setFaena([false, false, false, false, false]);
     notifyParent("handsfree");
     unlockAudio();
     await sendTurn({ mode: "greet" });
@@ -647,13 +674,16 @@ export function VoiceAgent({
         </button>
       </header>
 
-      <main className="relative z-10 flex min-h-dvh items-center justify-center px-4 pb-20">
+      <main className="relative z-10 flex min-h-dvh items-center justify-center px-4 pb-24">
         <Mascot
           state={status === "error" ? "error" : status}
           onClick={onMascot}
           disabled={thinking}
         />
       </main>
+      <div className="pointer-events-none absolute inset-x-0 bottom-6 z-20 flex justify-center px-4">
+        <FaenaTrail faena={faena} />
+      </div>
     </div>
   );
 }

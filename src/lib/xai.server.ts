@@ -40,6 +40,8 @@ export type ConverseInput = {
   sessionId?: string;
 };
 
+export type Faena = [boolean, boolean, boolean, boolean, boolean];
+
 export type ConverseOk = {
   ok: true;
   userText: string;
@@ -47,6 +49,7 @@ export type ConverseOk = {
   audioBase64?: string;
   audioMime?: string;
   next?: "incorporar";
+  faena?: Faena;
 };
 
 export type ConverseErr = {
@@ -69,14 +72,23 @@ function mimeToExt(mime: string) {
   return "webm";
 }
 
-function takeRegistroMark(text: string) {
-  const marked = /\[\[REGISTRO\]\]/i.test(text);
+function takeMarks(text: string) {
+  const registro = /\[\[REGISTRO\]\]/i.test(text);
+  const faenaMatch = text.match(/\[\[FAENA:([01],[01],[01],[01],[01])\]\]/i);
+  const faena: Faena | undefined = faenaMatch
+    ? (faenaMatch[1].split(",").map((n) => n === "1") as Faena)
+    : undefined;
   const clean = text
     .replace(/\[\[REGISTRO\]\]/gi, "")
+    .replace(/\[\[FAENA:[01],[01],[01],[01],[01]\]\]/gi, "")
     .replace(/\s+\n/g, "\n")
     .replace(/\n{2,}/g, "\n")
     .trim();
-  return { text: clean, next: marked ? ("incorporar" as const) : undefined };
+  return {
+    text: clean,
+    next: registro ? ("incorporar" as const) : undefined,
+    faena: registro ? ([true, true, true, true, true] as Faena) : faena,
+  };
 }
 
 export async function transcribeAudio(
@@ -120,7 +132,7 @@ export async function chatReply(
   totalTokens?: number;
 }> {
   const key = apiKey();
-  const clipped = history.slice(-8);
+  const clipped = history.slice(-16);
   const res = await fetch(CHAT_URL, {
     method: "POST",
     headers: {
@@ -380,7 +392,7 @@ export async function runConversation(
     };
   }
 
-  const marked = takeRegistroMark(assistantText);
+  const marked = takeMarks(assistantText);
   assistantText = marked.text;
 
   const result: ConverseOk = {
@@ -388,6 +400,7 @@ export async function runConversation(
     userText,
     assistantText,
     next: marked.next,
+    faena: marked.faena,
   };
 
   if (input.speak) {
