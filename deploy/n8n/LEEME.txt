@@ -1,0 +1,18 @@
+Culpeo + n8n + LLM (sin pagar xAI)
+
+1. En n8n: Importar deploy/n8n/culpeo-llm.json
+2. Variables de n8n:
+   CULPEO_LLM_URL    ej. https://api.groq.com/openai/v1/chat/completions
+   CULPEO_LLM_MODEL  ej. llama-3.3-70b-versatile
+   Header Auth: Authorization = Bearer TU_CLAVE_DEL_LLM
+3. Activar el workflow. Copia la URL del Webhook (Production).
+4. En el VPS, /etc/culpeo/env:
+
+   N8N_WEBHOOK_URL=https://tu-n8n/webhook/culpeo
+   N8N_WEBHOOK_SECRET=opcional
+
+   systemctl restart culpeo
+
+Culpeo manda systemPrompt + historial + lo que dijo la persona.
+n8n responde { "assistantText": "..." }.
+Sin xAI, el micrófono y la voz van en el navegador (Chrome / Safari).

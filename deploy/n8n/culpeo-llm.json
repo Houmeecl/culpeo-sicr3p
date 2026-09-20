@@ -1,0 +1,80 @@
+{
+  "name": "Culpeo LLM",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "culpeo",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "culpeo"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $input.first().json.body || $input.first().json;\nconst history = Array.isArray(b.history) ? b.history : [];\nconst messages = [{ role: 'system', content: b.systemPrompt || 'Eres Culpeo, voz de Proveedor Regional.' }]\n  .concat(history.map(m => ({ role: m.role, content: m.content })));\nif (b.userText) messages.push({ role: 'user', content: b.userText });\nif (!b.userText && b.mode === 'greet') messages.push({ role: 'user', content: '(inicio de conversación: saluda y pide permiso para grabar)' });\nreturn [{ json: { messages, sessionId: b.sessionId } }];"
+      },
+      "id": "prep",
+      "name": "Armar mensajes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.CULPEO_LLM_URL }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "Content-Type", "value": "application/json" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"{{ $env.CULPEO_LLM_MODEL }}\",\n  \"temperature\": 0.4,\n  \"max_tokens\": 280,\n  \"messages\": {{ JSON.stringify($json.messages) }}\n}",
+        "options": {}
+      },
+      "id": "llm",
+      "name": "LLM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const choice = $input.first().json.choices?.[0]?.message?.content || $input.first().json.output || '';\nreturn [{ json: { assistantText: String(choice).trim() } }];"
+      },
+      "id": "out",
+      "name": "Respuesta Culpeo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "resp",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [960, 0]
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Armar mensajes", "type": "main", "index": 0 }]] },
+    "Armar mensajes": { "main": [[{ "node": "LLM", "type": "main", "index": 0 }]] },
+    "LLM": { "main": [[{ "node": "Respuesta Culpeo", "type": "main", "index": 0 }]] },
+    "Respuesta Culpeo": { "main": [[{ "node": "Respond", "type": "main", "index": 0 }]] }
+  },
+  "active": true,
+  "settings": { "executionOrder": "v1" }
+}

@@ -97,6 +97,8 @@ export function VoiceAgent({
   const [status, setStatus] = useState<AgentStatus>("idle");
   const [muted, setMuted] = useState(false);
   const [faena, setFaena] = useState<Faena>([false, false, false, false, false]);
+  const speechRef = useRef<"server" | "browser">("server");
+  const recRef = useRef<{ stop: () => void; abort: () => void } | null>(null);
 
   const historyRef = useRef<ChatTurn[]>([]);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -231,6 +233,11 @@ export function VoiceAgent({
 
   function stopPlayback() {
     stopSpeakPump();
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    recRef.current?.abort();
+    recRef.current = null;
     const source = ttsSourceRef.current;
     if (source) {
       source.onended = null;
@@ -394,10 +401,17 @@ export function VoiceAgent({
       if (result.faena) {
         setFaena((prev) => mergeFaena(prev, result.faena));
       }
+      if (result.speech) speechRef.current = result.speech;
 
       if (result.audioBase64 && !mutedRef.current) {
         busyRef.current = false;
         await playAudio(result.audioBase64, result.audioMime || "audio/mpeg");
+        return;
+      }
+
+      if (!mutedRef.current && result.assistantText) {
+        busyRef.current = false;
+        await speakBrowser(result.assistantText);
         return;
       }
 
@@ -539,11 +553,105 @@ export function VoiceAgent({
     vadRef.current = window.requestAnimationFrame(tick);
   }
 
+  async function speakBrowser(text: string) {
+    if (!text || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      setAgentStatus("idle");
+      busyRef.current = false;
+      if (pendingNextRef.current === "incorporar") {
+        goToRegistro();
+        return;
+      }
+      if (liveRef.current) resumeListening(200);
+      return;
+    }
+    setAgentStatus("speaking");
+    await new Promise<void>((resolve) => {
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "es-CL";
+      utter.rate = 1.02;
+      const pick = window.speechSynthesis
+        .getVoices()
+        .find((v) => v.lang.toLowerCase().startsWith("es"));
+      if (pick) utter.voice = pick;
+      utter.onend = () => resolve();
+      utter.onerror = () => resolve();
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utter);
+      window.setTimeout(resolve, Math.min(24000, 900 + text.length * 70));
+    });
+    if (pendingNextRef.current === "incorporar") {
+      goToRegistro();
+      return;
+    }
+    setAgentStatus("idle");
+    busyRef.current = false;
+    if (liveRef.current) resumeListening(220);
+  }
+
+  function browserRecCtor() {
+    const w = window as Window & {
+      SpeechRecognition?: new () => BrowserSpeech;
+      webkitSpeechRecognition?: new () => BrowserSpeech;
+    };
+    return w.SpeechRecognition ?? w.webkitSpeechRecognition;
+  }
+
+  type BrowserSpeech = {
+    lang: string;
+    interimResults: boolean;
+    continuous: boolean;
+    start: () => void;
+    stop: () => void;
+    abort: () => void;
+    onresult: ((ev: { results: { 0: { 0: { transcript: string } } } }) => void) | null;
+    onerror: ((ev: { error?: string }) => void) | null;
+    onend: (() => void) | null;
+  };
+
+  async function startBrowserListening() {
+    const Ctor = browserRecCtor();
+    if (!Ctor) {
+      setAgentStatus("error");
+      return;
+    }
+    recRef.current?.abort();
+    const rec = new Ctor();
+    rec.lang = "es-CL";
+    rec.interimResults = false;
+    rec.continuous = false;
+    rec.onresult = (ev) => {
+      const text = ev.results[0][0].transcript?.trim();
+      recRef.current = null;
+      if (text) void sendTurn({ mode: "text", text });
+      else if (liveRef.current) resumeListening(400);
+    };
+    rec.onerror = (ev) => {
+      recRef.current = null;
+      if (ev.error === "aborted") return;
+      if (liveRef.current) resumeListening(700);
+      else setAgentStatus("error");
+    };
+    rec.onend = () => {
+      if (recRef.current && statusRef.current === "listening" && liveRef.current) {
+        recRef.current = null;
+        resumeListening(400);
+      }
+    };
+    recRef.current = rec;
+    setAgentStatus("listening");
+    rec.start();
+  }
+
   async function startListening() {
     if (busyRef.current || statusRef.current === "listening") return;
     stopPlayback();
     stopVad();
     stopListenDelay();
+
+    if (speechRef.current === "browser" && browserRecCtor()) {
+      await startBrowserListening();
+      return;
+    }
 
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
       setAgentStatus("error");
@@ -580,6 +688,10 @@ export function VoiceAgent({
   async function stopListening() {
     stopTimer();
     stopVad();
+    if (recRef.current) {
+      recRef.current.stop();
+      recRef.current = null;
+    }
     const recorder = recorderRef.current;
     if (recorder && recorder.state !== "inactive") recorder.stop();
     else if (statusRef.current === "listening") {

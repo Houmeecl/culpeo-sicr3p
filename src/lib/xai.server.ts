@@ -50,6 +50,7 @@ export type ConverseOk = {
   audioMime?: string;
   next?: "incorporar";
   faena?: Faena;
+  speech?: "server" | "browser";
 };
 
 export type ConverseErr = {
@@ -240,7 +241,12 @@ const greetCache = new Map<string, { audioBase64: string; mime: string }>();
 export async function runConversation(
   input: ConverseInput,
 ): Promise<ConverseResult> {
-  if (!apiKey()) {
+  const { n8nConverse, n8nWebhookUrl } = await import("./n8n.server");
+  const hasXai = Boolean(apiKey());
+  const hasN8n = Boolean(n8nWebhookUrl());
+  const speech: "server" | "browser" = hasXai ? "server" : "browser";
+
+  if (!hasXai && !hasN8n) {
     return {
       ok: false,
       error: "unavailable",
@@ -263,7 +269,7 @@ export async function runConversation(
 
   if (greet) {
     const spokenText = greetText(input);
-    if (input.speak) {
+    if (input.speak && hasXai) {
       try {
         let cached = greetCache.get(spokenText);
         if (!cached) {
@@ -277,15 +283,16 @@ export async function runConversation(
           assistantText: spokenText,
           audioBase64: cached.audioBase64,
           audioMime: cached.mime,
+          speech,
         };
       } catch {
-        return { ok: true, userText: "", assistantText: spokenText };
+        return { ok: true, userText: "", assistantText: spokenText, speech };
       }
     }
-    return { ok: true, userText: "", assistantText: spokenText };
+    return { ok: true, userText: "", assistantText: spokenText, speech };
   }
 
-  if (input.mode === "voice") {
+  if (input.mode === "voice" && !userText) {
     const audio = input.audioBase64 ?? "";
     if (!audio) {
       return {
@@ -301,79 +308,101 @@ export async function runConversation(
         message: "El audio es demasiado largo. Graba hasta 20 segundos.",
       };
     }
-    try {
-      userText = await transcribeAudio(
-        audio,
-        input.mimeType || "audio/webm",
-      );
-    } catch {
-      return {
-        ok: false,
-        error: "failed",
-        message:
-          "No pude transcribir el audio. Escribe tu pregunta o reintenta el micrófono.",
-      };
+    if (hasXai) {
+      try {
+        userText = await transcribeAudio(
+          audio,
+          input.mimeType || "audio/webm",
+        );
+      } catch {
+        return {
+          ok: false,
+          error: "failed",
+          message:
+            "No pude transcribir el audio. Escribe tu pregunta o reintenta el micrófono.",
+        };
+      }
     }
   }
 
-  if (!userText) {
-    return {
-      ok: false,
-      error: "no-speech",
-      message: "No alcancé a escucharte. Habla un poco más cerca del micrófono.",
-    };
-  }
-
   let assistantText = "";
-  try {
-    const { culpeoAgent, ai, isAmplitudeAiEnabled } = await import(
-      "./amplitude-ai.ts"
-    );
-    const sessionId =
-      (input.sessionId && input.sessionId.trim()) || crypto.randomUUID();
-    const runChat = async (s: {
-      trackUserMessage: (content: string) => void;
-      trackAiMessage: (
-        content: string,
-        model: string,
-        provider: string,
-        latencyMs: number,
-        opts?: Record<string, unknown>,
-      ) => void;
-    } | null) => {
-      s?.trackUserMessage(userText);
-      const start = performance.now();
-      try {
-        const reply = await chatReply(input.history, userText);
-        assistantText = reply.text;
-        const latencyMs = Math.max(1, performance.now() - start);
-        s?.trackAiMessage(assistantText, "grok-4.5", "xai", latencyMs, {
-          inputTokens: reply.inputTokens ?? 1,
-          outputTokens: reply.outputTokens ?? 1,
-          totalTokens: reply.totalTokens,
-          totalCostUsd: 0,
-        });
-      } catch (error) {
-        const latencyMs = Math.max(1, performance.now() - start);
-        s?.trackAiMessage("", "grok-4.5", "xai", latencyMs, {
-          isError: true,
-          errorMessage: error instanceof Error ? error.message : "chat failed",
-          totalCostUsd: 0,
-        });
-        throw error;
-      }
-    };
+  let n8nAudio: { audioBase64?: string; audioMime?: string } = {};
+  let n8nFaena: Faena | undefined;
+  let n8nNext: "incorporar" | undefined;
 
-    if (isAmplitudeAiEnabled()) {
-      try {
-        await culpeoAgent.session({ sessionId }).run(async (s) => {
-          await runChat(s);
-        });
-      } finally {
-        await ai.flush();
+  try {
+    if (hasN8n) {
+      const viaN8n = await n8nConverse(input, userText);
+      if (viaN8n?.userText) userText = viaN8n.userText;
+      if (viaN8n?.assistantText) {
+        assistantText = viaN8n.assistantText;
+        n8nAudio = {
+          audioBase64: viaN8n.audioBase64,
+          audioMime: viaN8n.audioMime,
+        };
+        n8nFaena = viaN8n.faena;
+        n8nNext = viaN8n.next;
       }
-    } else {
-      await runChat(null);
+    }
+
+    if (!assistantText && !userText) {
+      return {
+        ok: false,
+        error: "no-speech",
+        message: "No alcancé a escucharte. Habla un poco más cerca del micrófono.",
+      };
+    }
+
+    if (!assistantText && hasXai) {
+      const { culpeoAgent, ai, isAmplitudeAiEnabled } = await import(
+        "./amplitude-ai.ts"
+      );
+      const sessionId =
+        (input.sessionId && input.sessionId.trim()) || crypto.randomUUID();
+      const runChat = async (s: {
+        trackUserMessage: (content: string) => void;
+        trackAiMessage: (
+          content: string,
+          model: string,
+          provider: string,
+          latencyMs: number,
+          opts?: Record<string, unknown>,
+        ) => void;
+      } | null) => {
+        s?.trackUserMessage(userText);
+        const start = performance.now();
+        try {
+          const reply = await chatReply(input.history, userText);
+          assistantText = reply.text;
+          const latencyMs = Math.max(1, performance.now() - start);
+          s?.trackAiMessage(assistantText, "grok-4.5", "xai", latencyMs, {
+            inputTokens: reply.inputTokens ?? 1,
+            outputTokens: reply.outputTokens ?? 1,
+            totalTokens: reply.totalTokens,
+            totalCostUsd: 0,
+          });
+        } catch (error) {
+          const latencyMs = Math.max(1, performance.now() - start);
+          s?.trackAiMessage("", "grok-4.5", "xai", latencyMs, {
+            isError: true,
+            errorMessage: error instanceof Error ? error.message : "chat failed",
+            totalCostUsd: 0,
+          });
+          throw error;
+        }
+      };
+
+      if (isAmplitudeAiEnabled()) {
+        try {
+          await culpeoAgent.session({ sessionId }).run(async (s) => {
+            await runChat(s);
+          });
+        } finally {
+          await ai.flush();
+        }
+      } else {
+        await runChat(null);
+      }
     }
   } catch {
     return {
@@ -399,11 +428,15 @@ export async function runConversation(
     ok: true,
     userText,
     assistantText,
-    next: marked.next,
-    faena: marked.faena,
+    next: n8nNext ?? marked.next,
+    faena: n8nFaena ?? marked.faena,
+    speech,
   };
 
-  if (input.speak) {
+  if (n8nAudio.audioBase64) {
+    result.audioBase64 = n8nAudio.audioBase64;
+    result.audioMime = n8nAudio.audioMime || "audio/mpeg";
+  } else if (input.speak && hasXai) {
     try {
       const spoken = await speakText(assistantText);
       result.audioBase64 = spoken.audioBase64;
