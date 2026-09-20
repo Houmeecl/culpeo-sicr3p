@@ -1,7 +1,11 @@
-# culpeo.sicr3p.cl — Caddy saca el certificado solo.
+# www.proveedorregional.cl — Caddy saca el certificado.
 # Culpeo (micrófono) necesita HTTPS.
 
-culpeo.sicr3p.cl {
+www.proveedorregional.cl {
 	encode gzip
 	reverse_proxy 127.0.0.1:3000
+}
+
+proveedorregional.cl {
+	redir https://www.proveedorregional.cl{uri} permanent
 }

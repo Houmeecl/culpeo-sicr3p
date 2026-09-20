@@ -7,7 +7,7 @@
 
 set -eu
 
-DOMAIN="${CULPEO_DOMAIN:-culpeo.sicr3p.cl}"
+DOMAIN="${CULPEO_DOMAIN:-www.proveedorregional.cl}"
 ROOT="${CULPEO_ROOT:-/opt/culpeo}"
 REPO="${CULPEO_REPO:-https://github.com/Houmeecl/culpeo-sicr3p.git}"
 USER_NAME="culpeo"
@@ -52,7 +52,7 @@ if [ ! -f /etc/culpeo/env ]; then
   chmod 600 /etc/culpeo/env
 fi
 
-sed "s/culpeo.sicr3p.cl/$DOMAIN/g" "$ROOT/deploy/vps/Caddyfile" >/etc/caddy/Caddyfile
+sed "s/www.proveedorregional.cl/$DOMAIN/g" "$ROOT/deploy/vps/Caddyfile" >/etc/caddy/Caddyfile
 
 NODE_BIN="$(command -v node)"
 sed "s#/usr/bin/node#$NODE_BIN#g" "$ROOT/deploy/vps/culpeo.service" \
