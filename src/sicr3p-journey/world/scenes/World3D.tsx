@@ -7,6 +7,8 @@ import { WORLD } from "../assets/palette";
 import { Chancha3D, Culpeo3D } from "../characters/Guides3D";
 import { Walker } from "../characters/Walker";
 import { StationRing, TrailTiles } from "../stations/StationRing";
+import { useBadgeCleanup } from "../stations/badge-texture";
+import { ProgressRoad, StationBadges, StationProps } from "../stations/Wayfinding";
 import { stationIndex } from "../stations/layout";
 import { Connection, Island, Mountains } from "./Island";
 
@@ -134,6 +136,7 @@ export default function World3D(props: WorldViewProps) {
   const follow = useMemo(() => new Vector3(0, 0.2, 4.3), []);
   const identityIdx = stationIndex("identity");
   const activeIndex = walkerTarget === null ? null : Math.ceil(walkerTarget - 1e-6);
+  useBadgeCleanup();
 
   return (
     <Canvas
@@ -141,15 +144,15 @@ export default function World3D(props: WorldViewProps) {
       dpr={[1, 1.5]}
       frameloop={paused ? "never" : "always"}
       camera={{ position: [0, 16, 22], fov: 38, near: 0.1, far: 100 }}
-      gl={{ antialias: true, powerPreference: "low-power" }}
+      gl={{ antialias: true, alpha: true, powerPreference: "low-power" }}
       aria-hidden="true"
     >
-      <color attach="background" args={[WORLD.background]} />
       <fog attach="fog" args={[WORLD.background, 16, 30]} />
-      <hemisphereLight args={["#ffffff", "#e9e1d6", 1.1]} />
+      <hemisphereLight args={["#F2F6FF", "#DDE3EE", 1.35]} />
       <directionalLight
         position={[6, 10, 6]}
-        intensity={1.6}
+        color="#FFF8F0"
+        intensity={1.5}
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-camera-left={-8}
@@ -167,6 +170,9 @@ export default function World3D(props: WorldViewProps) {
       <Spin active={scene === "cover" && !reducedMotion}>
         <Island />
         <Mountains />
+        <ProgressRoad done={stationsDone} activeIndex={activeIndex} />
+        <StationProps activeIndex={activeIndex} still={reducedMotion} />
+        <StationBadges done={stationsDone} activeIndex={activeIndex} />
         <StationRing
           done={stationsDone}
           activeIndex={activeIndex}

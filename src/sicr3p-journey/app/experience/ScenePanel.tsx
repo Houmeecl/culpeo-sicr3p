@@ -20,9 +20,7 @@ export function ScenePanel({
   const headingId = `jy-scene-${scene}`;
   return (
     <section className="jy-panel" data-wide={wide} aria-labelledby={headingId}>
-      <p className="jy-kicker">
-        {sceneNumber(scene)}. {def?.title}
-      </p>
+      <StepKicker scene={scene} />
       {title ? (
         <h2 id={headingId} className="jy-panel-title">
           {title}
@@ -64,5 +62,37 @@ export function BackButton({ onClick }: { onClick: () => void }) {
     <button type="button" className="jy-btn jy-btn-ghost" onClick={onClick}>
       ← Atrás
     </button>
+  );
+}
+
+/** "5. EL POS" + arco de progreso "5/11": dónde estoy y cuánto falta, de un vistazo. */
+export function StepKicker({ scene }: { scene: SceneId }) {
+  const n = sceneNumber(scene);
+  const total = SCENES.length;
+  const def = SCENES.find((s) => s.id === scene);
+  const r = 15;
+  const c = 2 * Math.PI * r;
+  return (
+    <div className="jy-kicker-row">
+      <p className="jy-kicker">
+        {n}. {def?.title}
+      </p>
+      <span className="jy-step" aria-label={`Paso ${n} de ${total}`}>
+        <svg viewBox="0 0 36 36" width="36" height="36" aria-hidden="true">
+          <circle cx="18" cy="18" r={r} className="jy-step-track" />
+          <circle
+            cx="18"
+            cy="18"
+            r={r}
+            className="jy-step-fill"
+            strokeDasharray={c}
+            strokeDashoffset={c * (1 - n / total)}
+          />
+        </svg>
+        <span>
+          {n}/{total}
+        </span>
+      </span>
+    </div>
   );
 }

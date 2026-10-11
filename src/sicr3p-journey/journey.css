@@ -76,6 +76,8 @@
 .jy-stage {
   position: absolute;
   inset: 0;
+  /* Cielo: azul claro arriba, gris neutro abajo (da profundidad al mundo). */
+  background: linear-gradient(180deg, #d9e6fb 0%, #eaf1fb 38%, #f4f6f9 100%);
 }
 
 .jy-stage canvas {
@@ -1695,4 +1697,47 @@
   font-style: italic;
   font-weight: 600;
   color: var(--jy-accent-ink);
+}
+
+.jy-kicker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: -6px;
+}
+
+.jy-step {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+}
+
+.jy-step svg {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+}
+
+.jy-step span {
+  font-size: 0.6em;
+  font-weight: 800;
+  color: var(--jy-ink);
+}
+
+.jy-step-track {
+  fill: none;
+  stroke: var(--jy-line);
+  stroke-width: 3;
+}
+
+.jy-step-fill {
+  fill: none;
+  stroke: var(--jy-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 600ms var(--jy-ease);
 }

@@ -7,6 +7,8 @@ export const WORLD = {
   ink: "#0F1B3D",
   stone: "#CBD3E0",
   tileOff: "#E6ECF5",
+  /** Camino entre estaciones (sin recorrer). */
+  road: "#E4EAF4",
   /** Violeta SICR3P/: estaciones, ruta y anillo de conexión. */
   accent: "#6B5CF6",
   accentSoft: "#CFC9FF",

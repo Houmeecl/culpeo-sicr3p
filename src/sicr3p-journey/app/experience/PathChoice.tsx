@@ -1,5 +1,6 @@
 import type { JourneyPath } from "../../modules/journey-engine/types";
 import { GuideAvatar } from "../../world/scenes/World2D";
+import { StepKicker } from "./ScenePanel";
 
 const OPTIONS: { path: JourneyPath; title: string; guide: string; line: string }[] = [
   {
@@ -27,7 +28,7 @@ export function PathChoice({
 }) {
   return (
     <section className="jy-panel" aria-labelledby="jy-path-title">
-      <p className="jy-kicker">2. Elige tu camino</p>
+      <StepKicker scene="path" />
       <h2 id="jy-path-title" className="jy-panel-title">
         ¿Cómo quieres entrar a SICR3P/?
       </h2>

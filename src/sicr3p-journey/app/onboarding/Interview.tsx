@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import type { JourneyPath, Question } from "../../modules/journey-engine/types";
 import { formatTaxId, validateAnswer } from "../../modules/identity/validation";
 import { GuideBubble } from "../experience/GuideBubble";
+import { StepKicker } from "../experience/ScenePanel";
 import { PathTrail } from "../experience/PathTrail";
 
 type Props = {
@@ -39,7 +40,7 @@ export function Interview(props: Props) {
 
   return (
     <section className="jy-panel" aria-labelledby={inputId + "-label"}>
-      <p className="jy-kicker">3. Identidad</p>
+      <StepKicker scene="identity" />
       <PathTrail done={index} total={total} label="Identidad" />
       <GuideBubble path={path}>
         <span id={inputId + "-label"}>{question.prompt}</span>

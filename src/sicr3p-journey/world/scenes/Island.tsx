@@ -112,7 +112,7 @@ export function Mountains() {
           <meshStandardMaterial
             color={p.color}
             emissive={p.color}
-            emissiveIntensity={0.35}
+            emissiveIntensity={0.65}
             roughness={1}
             flatShading
           />

@@ -16,7 +16,7 @@ const NODES = [
   {
     id: "mandantes",
     label: "Empresas mandantes",
-    x: 82,
+    x: 80,
     y: 22,
     verb: "Vender",
     line: "Vende a empresas que contratan en el territorio.",
@@ -24,7 +24,7 @@ const NODES = [
   {
     id: "clientes",
     label: "Clientes",
-    x: 88,
+    x: 85,
     y: 62,
     verb: "Entregar beneficios",
     line: "Premia a tus clientes con la tarjeta SICR3P/.",
@@ -48,7 +48,7 @@ const NODES = [
   {
     id: "colaborar",
     label: "Otras empresas",
-    x: 8,
+    x: 16,
     y: 54,
     verb: "Colaborar",
     line: "Colabora con empresas cercanas.",
