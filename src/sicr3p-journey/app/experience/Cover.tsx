@@ -7,7 +7,15 @@ export function Cover({ onStart }: { onStart: () => void }) {
       <p className="jy-cover-tagline">Todo comienza con una conexión.</p>
       <button type="button" className="jy-btn jy-btn-primary jy-btn-lg" onClick={onStart} autoFocus>
         Comenzar recorrido
+        <span className="jy-btn-arrow" aria-hidden="true">
+          →
+        </span>
       </button>
+      <ul className="jy-cover-tags" aria-label="Una red">
+        <li>Empresas</li>
+        <li>Personas</li>
+        <li>Territorios</li>
+      </ul>
     </section>
   );
 }

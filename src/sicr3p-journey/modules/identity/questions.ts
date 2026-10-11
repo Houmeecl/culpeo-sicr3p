@@ -26,7 +26,7 @@ export const QUESTIONS: Record<JourneyPath, Question[]> = {
     {
       id: "fullName",
       kind: "text",
-      prompt: "¡Hola! ¿Cómo te llamas?",
+      prompt: "Hola, soy tu guía. Empecemos con lo básico: ¿cómo te llamas?",
       placeholder: "Tu nombre",
       autoComplete: "name",
       required: true,
@@ -61,7 +61,7 @@ export const QUESTIONS: Record<JourneyPath, Question[]> = {
     {
       id: "companyName",
       kind: "text",
-      prompt: "¿Cómo se llama tu empresa?",
+      prompt: "Hola, soy Culpeo. ¿Cómo se llama tu empresa?",
       placeholder: "Nombre de la empresa",
       autoComplete: "organization",
       required: true,
@@ -79,13 +79,6 @@ export const QUESTIONS: Record<JourneyPath, Question[]> = {
       prompt: "¿Quién la representa?",
       placeholder: "Nombre del representante",
       autoComplete: "name",
-      required: true,
-    },
-    {
-      id: "activity",
-      kind: "choice",
-      prompt: "¿Cuál es su actividad principal?",
-      options: ACTIVITY_OPTIONS,
       required: true,
     },
     {
@@ -108,3 +101,18 @@ export const QUESTIONS: Record<JourneyPath, Question[]> = {
     CONSENT,
   ],
 };
+
+export const CHANNEL_OPTIONS = [
+  { value: "physical", label: "Local físico" },
+  { value: "web", label: "Canal web" },
+  { value: "mobile", label: "Canal móvil" },
+];
+
+export const INTEREST_OPTIONS = [
+  { value: "gastronomia", label: "Gastronomía" },
+  { value: "comercio_local", label: "Comercio local" },
+  { value: "eventos", label: "Eventos" },
+  { value: "bienestar", label: "Bienestar" },
+  { value: "servicios", label: "Servicios" },
+  { value: "coleccionables", label: "Coleccionables" },
+];

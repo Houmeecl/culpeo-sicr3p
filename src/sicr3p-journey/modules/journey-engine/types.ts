@@ -6,14 +6,13 @@ export type SceneId =
   | "cover"
   | "path"
   | "identity"
-  | "business"
+  | "world"
   | "pos"
   | "network"
-  | "development"
-  | "loyalty"
-  | "merch"
+  | "solutions"
+  | "card"
   | "review"
-  | "activation"
+  | "payment"
   | "result";
 
 export type ApplicationStatus =
@@ -52,10 +51,34 @@ export type Question = {
 export type SceneDef = {
   id: SceneId;
   title: string;
+  /** Bajada corta (mapa del recorrido). */
+  subtitle: string;
   /** Escenas implementadas en esta fase del prototipo. */
   available: boolean;
-  /** Si sólo aplica a un camino. */
-  onlyFor?: JourneyPath;
+};
+
+/** Lo que el usuario construye después de la entrevista ("Tu mundo", soluciones). */
+export type JourneyProfile = {
+  /** Empresa: actividad principal. */
+  activity: string;
+  /** Empresa: nombre de marca (puede tener varias; el prototipo registra la principal). */
+  brand: string;
+  /** Empresa: canales (local físico, web, móvil). */
+  channels: string[];
+  /** Empresa: número de sucursales además del local principal. */
+  branches: number;
+  /** Persona: intereses de fidelización. */
+  interests: string[];
+  /** Soluciones de interés (servicios solicitados). */
+  solutions: string[];
+};
+
+export type PaymentSnapshot = {
+  status: "received" | "failed";
+  method: "card" | "transfer";
+  amountClp: number;
+  provider: string;
+  simulated: boolean;
 };
 
 export type KycSnapshot = {
@@ -78,6 +101,13 @@ export type JourneyState = {
   /** Identificador de la sesión del recorrido (se crea al comenzar). */
   sessionId: string | null;
   kyc: KycSnapshot | null;
+  profile: JourneyProfile;
+  /** Puntos de fidelización (en modo evento provienen de la demo POS simulada). */
+  points: number;
+  reviewConfirmed: boolean;
+  payment: PaymentSnapshot | null;
+  /** Al editar desde Revisión, volver ahí al terminar el bloque. */
+  returnTo: SceneId | null;
   startedAt: string | null;
   updatedAt: string | null;
 };

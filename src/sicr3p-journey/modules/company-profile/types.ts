@@ -23,20 +23,36 @@ export type CompanyProfile = {
   registrationAddress?: string;
 };
 
-/** Construye el perfil a partir de las respuestas de la entrevista. */
-export function companyFromAnswers(a: Record<string, string>): CompanyProfile {
+type WorldInput = { activity: string; brand: string; channels: string[]; branches: number };
+
+/** Construye el perfil a partir de la entrevista y de "Tu mundo". */
+export function companyFromAnswers(a: Record<string, string>, world?: WorldInput): CompanyProfile {
+  const brandName = world?.brand.trim() ?? "";
+  const brands: Brand[] = brandName ? [{ id: "b1", name: brandName }] : [];
+  const stores: Store[] = brandName
+    ? Array.from({ length: 1 + (world?.branches ?? 0) }, (_, i) => ({
+        id: `s${i + 1}`,
+        brandId: "b1",
+        name: i === 0 ? brandName : `${brandName} sucursal ${i}`,
+        isBranch: i > 0,
+      }))
+    : [];
+  const channels: Channel[] = (world?.channels ?? []).map((kind, i) => ({
+    id: `c${i + 1}`,
+    kind: kind as Channel["kind"],
+  }));
   return {
     legalEntity: { taxId: a.taxId ?? "", legalName: a.companyName ?? "", country: "CL" },
     displayName: a.companyName ?? "",
-    activity: a.activity ?? "",
+    activity: world?.activity ?? "",
     representative: {
       fullName: a.representative ?? "",
       email: a.email ?? "",
       phone: a.phone ?? "",
     },
-    brands: [],
-    stores: [],
-    channels: [],
+    brands,
+    stores,
+    channels,
     registrationAddress: a.registrationAddress,
   };
 }

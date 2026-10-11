@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { fictionalAnswers } from "../../adapters/demo/fixtures";
+import { fictionalAnswers, fictionalProfile } from "../../adapters/demo/fixtures";
 import { DEFAULT_CONFIG, createJourneyServices, type JourneyConfig } from "../../config";
 import type { JourneyEvent, JourneyEventHandler } from "../../contracts/events/journey-events";
 import {
@@ -8,10 +8,12 @@ import {
   initialState,
   journeyMap,
   journeyReducer,
-  nextStation,
+  loyaltyPublicId,
+  pendingItems,
   questionsFor,
   statusLabel,
   trailProgress,
+  worldReady,
 } from "../../modules/journey-engine/engine";
 import { SCENES } from "../../modules/journey-engine/steps";
 import type { JourneyState } from "../../modules/journey-engine/types";
@@ -19,7 +21,14 @@ import { WorldStage } from "../../world/scenes/WorldStage";
 import { usePrefersReducedMotion, useWebGLSupport } from "../../world/scenes/useWebGL";
 import { walkerTarget } from "../../world/stations/layout";
 import { Interview } from "../onboarding/Interview";
-import { IdentityReview } from "../review/IdentityReview";
+import { Payment } from "../completion/Payment";
+import { Result } from "../completion/Result";
+import { WorldBuilder } from "../onboarding/WorldBuilder";
+import { Review } from "../review/Review";
+import { LoyaltyCard } from "./LoyaltyCard";
+import { Network } from "./Network";
+import { PosStation } from "./PosStation";
+import { Solutions } from "./Solutions";
 import { Cover } from "./Cover";
 import { Hud, type A11yPrefs } from "./Hud";
 import { PathChoice } from "./PathChoice";
@@ -86,14 +95,27 @@ export function JourneyApp({ config, onStateChange, onEvent }: JourneyAppProps) 
     onStateChange?.(state);
   }, [state, hydrated, services, onStateChange]);
 
-  // Al completar la identidad se envía a verificación (simulada o proveedor externo).
+  // Verificación: al completar la identidad, y otra vez al llegar a Revisión si el
+  // proveedor pedía datos que se completaron en "Tu mundo".
   const kycInFlight = useRef(false);
+  const kycRetried = useRef<string | null>(null);
   useEffect(() => {
-    if (!hydrated || !identityDone(state) || state.kyc || kycInFlight.current || !state.path)
-      return;
+    if (!hydrated || !identityDone(state) || kycInFlight.current || !state.path) return;
+    const retryKey = JSON.stringify(state.profile);
+    const retry =
+      state.scene === "review" &&
+      state.kyc?.status === "pending_data" &&
+      kycRetried.current !== retryKey;
+    if (state.kyc && !retry) return;
+    if (retry) kycRetried.current = retryKey;
     kycInFlight.current = true;
     services.kyc
-      .submit({ sessionId: state.sessionId ?? "local", path: state.path, answers: state.answers })
+      .submit({
+        sessionId: state.sessionId ?? "local",
+        path: state.path,
+        answers: state.answers,
+        profile: state.profile,
+      })
       .catch(() => ({
         status: "failed" as const,
         provider: services.kyc.name,
@@ -192,6 +214,10 @@ export function JourneyApp({ config, onStateChange, onEvent }: JourneyAppProps) 
   const question = currentQuestion(state);
   const questions = questionsFor(state);
   const map = journeyMap(state);
+  const displayName =
+    (state.path === "company" ? state.answers.companyName : state.answers.fullName) ?? "";
+  const next = () => dispatch({ type: "next" });
+  const back = () => dispatch({ type: "back" });
 
   return (
     <div className="jy-root" data-large={prefs.largeText} data-reduced={reducedMotion}>
@@ -267,16 +293,76 @@ export function JourneyApp({ config, onStateChange, onEvent }: JourneyAppProps) 
               state.path && dispatch({ type: "fill", answers: fictionalAnswers(state.path) })
             }
           />
-        ) : state.scene === "identity" && state.path ? (
-          <IdentityReview
+        ) : state.scene === "identity" ? null : !state.path ? null : state.scene === "world" ? (
+          <WorldBuilder
             path={state.path}
-            questions={questions}
+            profile={state.profile}
+            ready={worldReady(state)}
+            onChange={(profile) => dispatch({ type: "setProfile", profile })}
+            onNext={next}
+            onBack={back}
+            onFillFictional={
+              eventMode && state.path
+                ? () =>
+                    state.path &&
+                    dispatch({ type: "setProfile", profile: fictionalProfile(state.path) })
+                : undefined
+            }
+          />
+        ) : state.scene === "pos" ? (
+          <PosStation
+            path={state.path}
+            pos={services.pos}
+            onPoints={(points) => dispatch({ type: "addPoints", points })}
+            onNext={next}
+            onBack={back}
+          />
+        ) : state.scene === "network" ? (
+          <Network path={state.path} onNext={next} onBack={back} />
+        ) : state.scene === "solutions" ? (
+          <Solutions
+            path={state.path}
+            selected={state.profile.solutions}
+            onChange={(solutions) => dispatch({ type: "setProfile", profile: { solutions } })}
+            onNext={next}
+            onBack={back}
+          />
+        ) : state.scene === "card" ? (
+          <LoyaltyCard
+            path={state.path}
+            name={displayName}
+            publicId={loyaltyPublicId(state)}
+            points={state.points}
+            validation={statusLabel(state).toLowerCase()}
+            onNext={next}
+            onBack={back}
+          />
+        ) : state.scene === "review" ? (
+          <Review
+            path={state.path}
             answers={state.answers}
-            statusLabel={statusLabel(state)}
+            profile={state.profile}
             kyc={state.kyc}
-            next={nextStation(state)}
+            pending={pendingItems(state)}
+            confirmed={state.reviewConfirmed}
+            onConfirm={(confirmed) => dispatch({ type: "confirmReview", confirmed })}
+            onEdit={(scene) => dispatch({ type: "editFromReview", scene })}
+            onNext={next}
+            onBack={back}
+          />
+        ) : state.scene === "payment" ? (
+          <Payment
+            sessionId={state.sessionId ?? "local"}
+            provider={services.payment}
+            onResult={(payment) => dispatch({ type: "paymentResult", payment })}
+            onBack={back}
+          />
+        ) : state.scene === "result" ? (
+          <Result
+            path={state.path}
+            name={displayName}
+            status={state.status}
             eventMode={eventMode}
-            onEdit={() => dispatch({ type: "editAnswers" })}
             onRestart={restart}
           />
         ) : null}

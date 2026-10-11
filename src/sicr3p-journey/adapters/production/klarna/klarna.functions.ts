@@ -7,7 +7,8 @@ import { buildKlarnaOnboardingPayload } from "./payload";
 
 const PROVIDER = "Klarna Management API";
 
-type Input = { sessionId: string; answers: Record<string, string> };
+type World = { activity: string; brand: string; channels: string[]; branches: number };
+type Input = { sessionId: string; answers: Record<string, string>; profile?: World };
 
 function parseInput(raw: unknown): Input {
   const data = raw as Partial<Input>;
@@ -46,7 +47,7 @@ export const klarnaOnboardCompany = createServerFn({ method: "POST" })
     }
 
     const built = buildKlarnaOnboardingPayload(
-      companyFromAnswers(data.answers),
+      companyFromAnswers(data.answers, data.profile),
       `sicr3p-${data.sessionId}`,
       data.answers.entityType,
     );

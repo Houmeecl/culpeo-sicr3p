@@ -18,6 +18,8 @@ export const klarnaKyc: KycProvider = {
         missing: [],
       };
     }
-    return klarnaOnboardCompany({ data: { sessionId: req.sessionId, answers: req.answers } });
+    return klarnaOnboardCompany({
+      data: { sessionId: req.sessionId, answers: req.answers, profile: req.profile },
+    });
   },
 };

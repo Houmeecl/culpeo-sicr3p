@@ -86,3 +86,38 @@ export function Connection({ still }: { still: boolean }) {
     </group>
   );
 }
+
+/** Cordillera lavanda alrededor de la maqueta (guiño a Antofagasta). */
+export function Mountains() {
+  const peaks = useMemo(
+    () =>
+      Array.from({ length: 16 }, (_, i) => {
+        const a = (i / 16) * Math.PI * 2 + (i % 2) * 0.12;
+        const r = 16 + (i % 3) * 1.4;
+        return {
+          x: Math.cos(a) * r,
+          z: Math.sin(a) * r,
+          h: 3 + ((i * 5) % 4) * 0.9,
+          w: 3 + (i % 3) * 0.7,
+          color: i % 2 ? "#F0E2F3" : "#F6EAF6",
+        };
+      }),
+    [],
+  );
+  return (
+    <group position={[0, -0.8, 0]}>
+      {peaks.map((p, i) => (
+        <mesh key={i} position={[p.x, p.h / 2, p.z]}>
+          <coneGeometry args={[p.w, p.h, 5]} />
+          <meshStandardMaterial
+            color={p.color}
+            emissive={p.color}
+            emissiveIntensity={0.35}
+            roughness={1}
+            flatShading
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}

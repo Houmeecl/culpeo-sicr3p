@@ -20,7 +20,7 @@ export const TRANSITIONS: Record<ApplicationStatus, ApplicationStatus[]> = {
   draft: ["journey_started"],
   journey_started: ["identity_incomplete", "draft"],
   identity_incomplete: ["kyc_pending", "journey_started"],
-  kyc_pending: ["kyc_submitted", "identity_incomplete"],
+  kyc_pending: ["kyc_submitted", "identity_incomplete", "payment_pending"],
   kyc_submitted: ["payment_pending", "needs_documents", "identity_incomplete"],
   payment_pending: ["payment_received"],
   payment_received: ["in_review", "account_active"],

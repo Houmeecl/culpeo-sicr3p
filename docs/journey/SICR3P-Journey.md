@@ -64,23 +64,24 @@ Principios:
 
 ## 3. Mapa completo del recorrido
 
-| #   | Escena                      | Empresa (Culpeo)                                                 | Persona (chancha rosa)                           | Checkpoint                 |
-| --- | --------------------------- | ---------------------------------------------------------------- | ------------------------------------------------ | -------------------------- |
-| 0   | Portada                     | ✓                                                                | ✓                                                | `journey_started`          |
-| 1   | Elección de camino          | ✓                                                                | ✓                                                | `path_chosen`              |
-| 2   | Identidad (entrevista)      | empresa, RUT, representante, actividad, contacto, consentimiento | nombre, correo, teléfono, comuna, consentimiento | `identity_done`            |
-| 3   | Construye tu negocio        | entidad, actividad, marcas, locales, canales, sucursales         | se omite (opcional: intereses)                   | `business_done`            |
-| 4   | Estación POS **[SIMULADO]** | demo de compra + puntos                                          | demo de compra + puntos (como cliente)           | `pos_seen` (no bloqueante) |
-| 5   | Red empresarial             | nodos explorables                                                | vista resumida                                   | `network_seen`             |
-| 6   | Desarrollo                  | 4 estaciones                                                     | resumen breve                                    | `development_seen`         |
-| 7   | Fidelización                | tarjeta rosa (cuenta empresa)                                    | tarjeta rosa (persona)                           | `loyalty_seen`             |
-| 8   | Merchandising               | vitrina                                                          | vitrina                                          | `merch_seen`               |
-| 9   | Revisión                    | bloques editables                                                | bloques editables                                | `review_confirmed`         |
-| 10  | Activación **[SIMULADO]**   | $19.990 CLP                                                      | $19.990 CLP                                      | `payment_*`                |
-| 11  | Resultado                   | activa / en revisión                                             | tarjeta preparada                                | `finished`                 |
+Alineado al "Flujo visual de inscripción" (11 pasos = 11 estaciones del anillo).
 
-Reglas de flujo: se puede retroceder a cualquier escena completada; "Revisión" permite saltar a
-editar un bloque y volver; el modo _acompañado_ avanza la cámara con un único botón "Continuar".
+| #   | Paso                  | Empresa (Culpeo)                                                                   | Persona (chancha rosa)                           | Estado al salir                  |
+| --- | --------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------------------- |
+| 1   | Inicio                | ✓                                                                                  | ✓                                                | Recorrido iniciado               |
+| 2   | Elige tu camino       | ✓                                                                                  | ✓                                                | Identidad incompleta             |
+| 3   | Identidad             | empresa, RUT, representante, contacto, declaración de cumplimiento, consentimiento | nombre, correo, teléfono, comuna, consentimiento | Verificación pendiente → enviada |
+| 4   | Tu mundo              | actividad (8 categorías), marca, canales, sucursales                               | intereses                                        | —                                |
+| 5   | El POS **[SIMULADO]** | compra demostrativa + puntos (no bloqueante)                                       | igual                                            | —                                |
+| 6   | La red                | nodos explorables y encadenamiento                                                 | igual                                            | —                                |
+| 7   | Soluciones            | servicios de interés (desarrollo, B2B, sostenibilidad, terceros)                   | igual                                            | —                                |
+| 8   | Tu tarjeta            | tarjeta rosa de fidelización + vitrina de merchandising                            | igual                                            | —                                |
+| 9   | Revisión              | bloques editables + confirmación                                                   | igual                                            | Pago pendiente                   |
+| 10  | Pago **[SIMULADO]**   | $19.990 CLP, tarjeta o transferencia                                               | igual                                            | Pago recibido                    |
+| 11  | ¡Listo!               | activa (evento, aprobación simulada) / en revisión (real)                          | tarjeta preparada                                | Cuenta activa / En revisión      |
+
+Reglas: se puede retroceder; "Editar" en Revisión abre el bloque y vuelve a Revisión al terminar;
+las estaciones completadas se pueden tocar en el mapa o en el mundo 3D.
 
 ## 4. Diagrama de estados (ApplicationStatus)
 

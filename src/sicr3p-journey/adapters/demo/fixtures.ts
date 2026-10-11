@@ -1,4 +1,4 @@
-import type { JourneyPath } from "../../modules/journey-engine/types";
+import type { JourneyPath, JourneyProfile } from "../../modules/journey-engine/types";
 
 /**
  * Identidades ficticias para el modo evento. Los RUT son válidos en formato
@@ -12,9 +12,9 @@ const PEOPLE = [
 ];
 
 const COMPANIES = [
-  { companyName: "Cocinería El Faro", activity: "restaurante", representative: "Paula Díaz" },
-  { companyName: "Transportes Pampa", activity: "transporte", representative: "Jorge Tapia" },
-  { companyName: "Ferretería La Portada", activity: "comercio", representative: "Rosa Castillo" },
+  { companyName: "Cocinería El Faro", representative: "Paula Díaz" },
+  { companyName: "Transportes Pampa", representative: "Jorge Tapia" },
+  { companyName: "Ferretería La Portada", representative: "Rosa Castillo" },
 ];
 
 function pick<T>(list: T[]) {
@@ -40,4 +40,11 @@ export function fictionalAnswers(path: JourneyPath): Record<string, string> {
     complianceDeclaration: "yes",
     consent: "yes",
   };
+}
+
+/** "Tu mundo" ficticio para completar la demo rápidamente. */
+export function fictionalProfile(path: JourneyPath): Partial<JourneyProfile> {
+  return path === "company"
+    ? { activity: "restaurante", brand: "El Faro", channels: ["physical", "mobile"], branches: 1 }
+    : { interests: ["gastronomia", "eventos"] };
 }

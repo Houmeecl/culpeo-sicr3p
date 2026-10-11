@@ -17,7 +17,6 @@ export const companyAnswersSchema = z.object({
   companyName: z.string().trim().min(2),
   taxId: z.string().refine(isValidTaxId, "RUT inválido"),
   representative: z.string().trim().min(2),
-  activity: z.string().min(1),
   email: z.string().refine(isValidEmail, "Correo inválido"),
   phone: z.string().refine(isValidPhone, "Teléfono inválido"),
   complianceDeclaration: accepted,

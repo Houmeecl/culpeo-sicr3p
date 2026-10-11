@@ -39,6 +39,7 @@ export function Interview(props: Props) {
 
   return (
     <section className="jy-panel" aria-labelledby={inputId + "-label"}>
+      <p className="jy-kicker">3. Identidad</p>
       <PathTrail done={index} total={total} label="Identidad" />
       <GuideBubble path={path}>
         <span id={inputId + "-label"}>{question.prompt}</span>

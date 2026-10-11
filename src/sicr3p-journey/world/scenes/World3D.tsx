@@ -8,7 +8,7 @@ import { Chancha3D, Culpeo3D } from "../characters/Guides3D";
 import { Walker } from "../characters/Walker";
 import { StationRing, TrailTiles } from "../stations/StationRing";
 import { stationIndex } from "../stations/layout";
-import { Connection, Island } from "./Island";
+import { Connection, Island, Mountains } from "./Island";
 
 export type WorldViewProps = {
   scene: SceneId;
@@ -108,10 +108,10 @@ function Characters({
   if (scene === "path") {
     return (
       <>
-        <Walker target={target} side={-0.55} follow={follow} still={still}>
+        <Walker target={target} side={0.55} follow={follow} still={still}>
           <Culpeo3D position={[0, 0, 0]} cue={path === "company" ? cue : 0} still={still} />
         </Walker>
-        <Walker target={target} side={0.55} still={still}>
+        <Walker target={target} side={-0.55} still={still}>
           <Chancha3D position={[0, 0, 0]} cue={path === "person" ? cue : 0} still={still} />
         </Walker>
       </>
@@ -145,7 +145,7 @@ export default function World3D(props: WorldViewProps) {
       aria-hidden="true"
     >
       <color attach="background" args={[WORLD.background]} />
-      <fog attach="fog" args={[WORLD.background, 18, 34]} />
+      <fog attach="fog" args={[WORLD.background, 16, 30]} />
       <hemisphereLight args={["#ffffff", "#e9e1d6", 1.1]} />
       <directionalLight
         position={[6, 10, 6]}
@@ -161,11 +161,12 @@ export default function World3D(props: WorldViewProps) {
       <FollowCamera
         follow={follow}
         overview={scene === "cover"}
-        sidePanel={scene === "identity"}
+        sidePanel={scene !== "cover" && scene !== "path"}
         instant={reducedMotion}
       />
       <Spin active={scene === "cover" && !reducedMotion}>
         <Island />
+        <Mountains />
         <StationRing
           done={stationsDone}
           activeIndex={activeIndex}
