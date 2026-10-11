@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { FieldShell, TextField } from "@/components/form-field";
+import { CardStage } from "@/components/card-stage";
 import { PayCard } from "@/components/pay-card";
 import {
   ACTIVITIES,
@@ -170,17 +171,19 @@ export function CardIssuance() {
   const holder = card?.holder || form.fullName;
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:items-start lg:gap-14">
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:items-start lg:gap-14">
       <div className="flex flex-col items-center gap-5 lg:sticky lg:top-24">
-        <PayCard
-          holder={holder}
-          pan={card?.pan ?? null}
-          expiry={card?.expiry ?? "••/••"}
-          cvc={card?.cvc ?? null}
-          flipped={flipped}
-          onFlip={() => setFlipped((f) => !f)}
-          status={card ? "issued" : inReview ? "review" : "preview"}
-        />
+        <CardStage>
+          <PayCard
+            holder={holder}
+            pan={card?.pan ?? null}
+            expiry={card?.expiry ?? "••/••"}
+            cvc={card?.cvc ?? null}
+            flipped={flipped}
+            onFlip={() => setFlipped((f) => !f)}
+            status={card ? "issued" : inReview ? "review" : "preview"}
+          />
+        </CardStage>
         <button
           type="button"
           onClick={() => setFlipped((f) => !f)}

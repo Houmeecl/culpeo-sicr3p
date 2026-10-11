@@ -101,11 +101,17 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
     <div
       ref={frame}
       className="pay-card-frame"
-      style={{ width: "100%", maxWidth: 360, aspectRatio: `${W} / ${H}`, perspective: 1500 }}
+      style={{
+        position: "relative",
+        width: "100%",
+        maxWidth: 360,
+        aspectRatio: `${W} / ${H}`,
+        perspective: 1500,
+      }}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
     >
-      <div className="pay-card-bob" style={{ width: "100%", height: "100%" }}>
+      <div className="pay-card-bob" style={{ position: "absolute", inset: 0 }}>
         <div
           style={{
             width: W,
