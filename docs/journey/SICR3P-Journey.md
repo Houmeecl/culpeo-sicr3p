@@ -303,55 +303,87 @@ interface PosStation {
 
 ## 13. Riesgos técnicos
 
-| Riesgo                                     | Mitigación                                                                                        |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| Equipos de stand o teléfonos con GPU débil | Geometría procedural ligera, `dpr` limitado a 1,5, sombras simples, detección de WebGL y modo 2D. |
-| Conexión inestable en el evento            | Sin modelos ni texturas remotas; todo procedural; fuentes con _fallback_ del sistema.             |
-| Peso del bundle 3D                         | `three` + R3F (~245 KB gzip) se cargan de forma diferida sólo al mostrar el 3D; el 2D no los requiere.            |
-| Datos personales en el stand               | Modo evento con datos ficticios, `sessionStorage` y autolimpieza por inactividad.                 |
-| Confusión con producto financiero          | Copy revisado: "articula y conecta", tarjeta de fidelización, insignias de simulación.            |
-| Acoplamiento escena ↔ datos                | Engine puro con pruebas unitarias; escenas sólo leen estado derivado.                             |
-| SSR y WebGL                                | El canvas se monta sólo en el cliente.                                                            |
+| Riesgo                                     | Mitigación                                                                                             |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Equipos de stand o teléfonos con GPU débil | Geometría procedural ligera, `dpr` limitado a 1,5, sombras simples, detección de WebGL y modo 2D.      |
+| Conexión inestable en el evento            | Sin modelos ni texturas remotas; todo procedural; fuentes con _fallback_ del sistema.                  |
+| Peso del bundle 3D                         | `three` + R3F (~245 KB gzip) se cargan de forma diferida sólo al mostrar el 3D; el 2D no los requiere. |
+| Datos personales en el stand               | Modo evento con datos ficticios, `sessionStorage` y autolimpieza por inactividad.                      |
+| Confusión con producto financiero          | Copy revisado: "articula y conecta", tarjeta de fidelización, insignias de simulación.                 |
+| Acoplamiento escena ↔ datos                | Engine puro con pruebas unitarias; escenas sólo leen estado derivado.                                  |
+| SSR y WebGL                                | El canvas se monta sólo en el cliente.                                                                 |
 
-## 14. Estructura inicial del proyecto
+## 14. Estructura del proyecto
 
 ```
-src/journey/
-  index.ts                      API pública del módulo (JourneyApp, tipos, createJourneyServices)
-  config.ts                     JourneyConfig (mode, apiBase, eventResetMs, companion)
-  engine/
-    types.ts                    tipos del dominio del recorrido
-    steps.ts                    definición declarativa de escenas y preguntas
-    validation.ts               validadores (RUT, correo, teléfono, requeridos)
-    engine.ts                   reducer, acciones y selectores (sin React)
-    status.ts                   ApplicationStatus + transiciones permitidas
-  data/
-    ports.ts                    JourneyRepository, PaymentProvider, KycProvider, PosStation
-    local-repository.ts         modo demo/evento (memoria + sessionStorage)
-    api-repository.ts           modo conectado (contratos de la sección 9)
-    simulated.ts                KYC, pago y POS simulados (marcados)
-    fixtures.ts                 identidades ficticias para modo evento
-  ui/
-    JourneyApp.tsx              composición y teclado
-    Hud.tsx                     controles, estado, accesibilidad
-    GuideBubble.tsx             diálogo/subtítulo del guía
-    PathTrail.tsx               ruta iluminada (indicador de avance)
-    scenes/Cover.tsx · PathChoice.tsx · Interview.tsx · NextStation.tsx
-  world/
-    WorldStage.tsx              3D o 2D según soporte/preferencia
-    World3D.tsx                 Canvas, luces, isla, cámara
-    CameraRig.tsx               cámara guiada por estación
-    Island.tsx                  maqueta procedural
-    Guides3D.tsx                Culpeo y chancha rosa procedurales
-    World2D.tsx                 fallback SVG
-    useWebGL.ts                 detección de soporte
-  journey.css                   tokens y estilos del módulo
-src/routes/journey.tsx          ruta de demostración (pantalla completa)
-docs/journey/SICR3P-Journey.md  este documento
+src/sicr3p-journey/
+├── app/
+│   ├── experience/     JourneyApp (orquestación, teclado, eventos), Hud, GuideBubble,
+│   │                   PathTrail, Cover, PathChoice
+│   ├── onboarding/     Interview (una pregunta por vez)
+│   ├── review/         IdentityReview (identidad construida + resultado de verificación)
+│   └── completion/     Activación y Resultado (fase F3)
+├── modules/
+│   ├── journey-engine/ tipos, escenas, reducer y selectores (sin React)
+│   ├── identity/       preguntas y validadores (RUT, correo, teléfono)
+│   ├── kyc/            puerto KycProvider + declaración de cumplimiento
+│   ├── company-profile/ LegalEntity, Brand, Store, Channel (una cuenta por empresa)
+│   ├── loyalty/        cuentas, transacciones, recompensas, merchandising
+│   ├── subscription/   activación única $19.990 (sin niveles)
+│   ├── payment-adapter/ puerto PaymentProvider
+│   └── status/         estados de solicitud y transiciones
+├── world/
+│   ├── scenes/         World3D (R3F), Island, World2D (alternativa), WorldStage, useWebGL
+│   ├── characters/     Culpeo y chancha rosa procedurales + Walker (camina por el anillo)
+│   ├── stations/       layout del anillo, estaciones y baldosas de avance
+│   └── assets/         paleta (sin modelos remotos)
+├── adapters/
+│   ├── demo/           repositorio local, KYC/pago/POS simulados, identidades ficticias
+│   └── production/     repositorio API, klarna/ (payload, función de servidor, KycProvider)
+├── contracts/
+│   ├── events/         eventos de dominio (journey.*, identity.*, kyc.*, status.*)
+│   ├── api/            puertos y DTOs del API
+│   └── schemas/        zod: respuestas de entrevista y payload de onboarding Klarna
+├── config.ts           elige adaptadores según modo
+├── index.ts            API pública
+└── journey.css
+src/routes/journey.tsx  ruta de demostración (/journey, /journey?modo=real)
 ```
+
+### Personaje que avanza por los puntos
+
+Cada escena es un punto (estación) del anillo. El guía elegido es el personaje del usuario:
+camina de estación en estación (`world/characters/Walker.tsx`) y, durante la entrevista,
+avanza una baldosa por cada respuesta hasta llegar a la siguiente estación. La cámara lo
+sigue en tercera persona desde el interior del anillo. Las estaciones completadas se
+pueden tocar para volver a ellas. En 2D el personaje se desplaza igual sobre el plano.
+
+### Verificación y cumplimiento con Klarna (modo real)
+
+Referencia: [Klarna Network Distribution](https://docs.klarna.com/klarna-network-distribution/).
+
+- **KYB de empresas:** `adapters/production/klarna/` traduce el perfil de empresa al payload
+  de _Onboard a merchant_ del Klarna Management API (marca → `store_group`, local → `store`,
+  RUT → `legal_registration`, representante → `stakeholders`) y lo envía desde una
+  **función de servidor**. Autenticación `Authorization: Basic <API key>`.
+- **Cumplimiento:** la entrevista de empresa incluye la declaración de actividad fuera de la
+  lista de [negocios prohibidos y restringidos](https://docs.klarna.com/klarna-network-distribution/resources/legal-and-compliance/policies-and-term-of-service/prohibited-and-restricted-businesses/).
+- **Datos faltantes:** si el payload no está completo (dirección legal, tipo de entidad, marcas
+  y locales) no se llama a Klarna; el resultado `pending_data` lista lo que falta y se
+  completa en "Construye tu negocio".
+- **Configuración (variables del despliegue, nunca en el navegador):** `KLARNA_API_KEY`,
+  `KLARNA_ONBOARD_URL`. Sin ellas el resultado es `not_configured` y el recorrido continúa.
+- **Condiciones:** el Management API está pensado para **Acquiring Partners** habilitados por
+  Klarna. SICR3P/ no es adquirente: requiere operar junto a un adquirente aliado o con
+  credenciales que Klarna otorgue. Los campos internos marcados `VALIDAR` en
+  `contracts/schemas/klarna-onboarding.ts` deben confirmarse con la referencia del API.
+- **Personas:** su verificación externa aún no está definida (`not_configured`); la
+  fidelización no se bloquea.
+- **Modo evento:** siempre verificación simulada.
 
 ## 15. Prototipo
 
-Disponible en la ruta `/journey`: portada 3D, elección de camino con aparición del guía y primera
-entrevista completa (empresa y persona), con modo evento, modo 2D, movimiento reducido y teclado.
+Disponible en la ruta `/journey`: portada 3D, elección de camino con los dos guías, personaje que
+camina por las estaciones, entrevista completa (empresa y persona) con verificación (simulada o
+Klarna), modo evento, modo 2D, movimiento reducido y teclado.
 Las escenas 3 en adelante aparecen como "Próxima estación" en el mapa.

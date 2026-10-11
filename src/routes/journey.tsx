@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { JourneyApp } from "@/journey";
-import journeyCss from "@/journey/journey.css?url";
+import { JourneyApp } from "@/sicr3p-journey";
+import journeyCss from "@/sicr3p-journey/journey.css?url";
 
 type Search = { modo?: "evento" | "real" };
 
