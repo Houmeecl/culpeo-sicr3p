@@ -6,7 +6,7 @@ const W = 432;
 const H = 685;
 
 const INK = "#0F1B3D";
-const SUB = "#4A3F6B";
+const SUB = "#5B3A55";
 const ACCENT = "#6B5CF6";
 const FONT = "'Inter', system-ui, sans-serif";
 
@@ -156,52 +156,40 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                   style={{ backgroundPosition: `${tilt.gx}% ${tilt.gy}%` }}
                 />
                 <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    right: -200,
-                    bottom: -230,
-                    width: 470,
-                    height: 470,
-                    borderRadius: "50%",
-                    background: "rgba(255,255,255,0.26)",
-                  }}
-                />
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    right: -80,
-                    bottom: -320,
-                    width: 430,
-                    height: 430,
-                    borderRadius: "50%",
-                    background: "rgba(107,92,246,0.16)",
-                  }}
-                />
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    left: -160,
-                    top: -240,
-                    width: 420,
-                    height: 420,
-                    borderRadius: "50%",
-                    border: "1px solid rgba(255,255,255,0.55)",
-                  }}
-                />
-                <div
                   style={{
                     position: "relative",
                     height: H,
                     boxSizing: "border-box",
-                    padding: "46px 40px 40px",
+                    padding: "38px 38px 36px",
                     display: "flex",
                     flexDirection: "column",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 2.4, color: SUB }}>
+                      {statusLabel.toUpperCase()}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        letterSpacing: 2,
+                        color: SUB,
+                        border: `1.5px solid ${SUB}`,
+                        borderRadius: 999,
+                        padding: "4px 10px",
+                      }}
+                    >
+                      DEMO
+                    </span>
+                  </div>
+                  <div style={{ marginTop: 150, display: "flex", alignItems: "center", gap: 16 }}>
                     <svg width="74" height="58" viewBox="0 0 74 58" aria-hidden="true">
                       <defs>
                         <linearGradient id="chipF" x1="0" y1="0" x2="1" y2="1">
@@ -242,47 +230,13 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                       <path className="pay-card-wave w3" d="M24 3c9 10 9 26 0 36" />
                     </svg>
                   </div>
-                  <div
-                    style={{
-                      marginTop: 88,
-                      fontWeight: 800,
-                      fontSize: 86,
-                      letterSpacing: -4,
-                      lineHeight: 1,
-                    }}
-                  >
-                    sicr<span style={{ color: ACCENT }}>3</span>p
-                    <span style={{ color: ACCENT }}>/</span>
-                  </div>
-                  <div
-                    style={{
-                      marginTop: 18,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 14,
-                      fontSize: 19,
-                      fontWeight: 600,
-                      letterSpacing: -0.3,
-                      lineHeight: 1.25,
-                    }}
-                  >
-                    <span style={{ width: 2, height: 46, background: ACCENT, borderRadius: 2 }} />
-                    <span>
-                      Desarrollamos empresas.
-                      <br />
-                      Acercamos soluciones.
-                    </span>
-                  </div>
-                  <div
-                    style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 4 }}
-                  >
-                    <span style={labelStyle}>NOMBRE DEL TITULAR</span>
+                  <div style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 6 }}>
                     <span
                       style={{
-                        fontSize: 25,
+                        fontSize: 22,
                         fontWeight: 600,
                         letterSpacing: -0.3,
-                        maxWidth: 350,
+                        maxWidth: 356,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
@@ -290,59 +244,24 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                     >
                       {name}
                     </span>
-                  </div>
-                  <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 4 }}>
-                    <span style={labelStyle}>VÁLIDA HASTA</span>
-                    <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 22 }}>
-                      {expiry}
+                    <span style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                      <span style={labelStyle}>VENCE</span>
+                      <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 18 }}>
+                        {expiry}
+                      </span>
                     </span>
                   </div>
                   <div
                     style={{
-                      marginTop: 22,
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
+                      marginTop: "auto",
+                      fontWeight: 800,
+                      fontSize: 92,
+                      letterSpacing: -4.5,
+                      lineHeight: 0.9,
                     }}
                   >
-                    <span
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                        padding: "9px 20px",
-                        borderRadius: 999,
-                        border: `1.5px solid ${ACCENT}`,
-                        fontSize: 17,
-                        fontWeight: 500,
-                      }}
-                    >
-                      <span
-                        style={{ width: 12, height: 12, borderRadius: "50%", background: ACCENT }}
-                      />
-                      {statusLabel}
-                    </span>
-                    <span
-                      style={{
-                        width: 108,
-                        height: 64,
-                        borderRadius: 10,
-                        border: `1.5px dashed ${SUB}`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        textAlign: "center",
-                        fontSize: 10,
-                        lineHeight: 1.3,
-                        letterSpacing: 1.6,
-                        fontWeight: 600,
-                        color: SUB,
-                      }}
-                    >
-                      DEMO
-                      <br />
-                      SIN RED
-                    </span>
+                    sicr<span style={{ color: ACCENT }}>3</span>p
+                    <span style={{ color: ACCENT }}>/</span>
                   </div>
                 </div>
                 <div className="pay-card-sheen" aria-hidden="true" />
@@ -368,30 +287,7 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                   aria-hidden="true"
                   style={{ backgroundPosition: `${100 - tilt.gx}% ${tilt.gy}%` }}
                 />
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    right: -200,
-                    bottom: -230,
-                    width: 470,
-                    height: 470,
-                    borderRadius: "50%",
-                    background: "rgba(255,255,255,0.26)",
-                  }}
-                />
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    right: -80,
-                    bottom: -320,
-                    width: 430,
-                    height: 430,
-                    borderRadius: "50%",
-                    background: "rgba(107,92,246,0.16)",
-                  }}
-                />
+
                 <div
                   className="pay-card-gloss"
                   aria-hidden="true"

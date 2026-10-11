@@ -23,7 +23,7 @@ function TarjetaPage() {
           Tarjeta soportada sicr3p/
         </p>
         <h1 className="mt-3 max-w-2xl font-display text-3xl font-semibold tracking-tight text-navy sm:text-4xl">
-          Tu tarjeta rosa perla tornasol, soportada por sicr3p/, en tu wallet.
+          Tu tarjeta rosa sicr3p/: simple, mate y lista para tu wallet.
         </h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-soft">
           Conoce a tu cliente primero: verificamos identidad, perfil de riesgo y revisión ESG, y

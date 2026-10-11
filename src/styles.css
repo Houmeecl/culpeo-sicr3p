@@ -534,7 +534,7 @@
   }
 }
 
-/* ── Tarjeta soportada rosa perla tornasol ─────────────────────────────── */
+/* ── Tarjeta soportada rosa pastel ─────────────────────────────── */
 @keyframes pay-bob {
   0%,
   100% {
@@ -610,33 +610,30 @@
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background-color: #f9cfe2;
+  background-color: #ffb3c7;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.6) inset,
     0 0 0 1px rgba(255, 255, 255, 0.45) inset,
     0 30px 50px -28px rgba(15, 27, 61, 0.45);
 }
 
-/* Base tornasol: rosa → lila → celeste → durazno, desplazándose */
+/* Rosa pastel mate con un velo tornasol muy sutil */
 .pay-card-iri {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(120% 70% at 15% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
+    radial-gradient(120% 60% at 20% 0%, rgba(255, 255, 255, 0.35), transparent 60%),
     linear-gradient(
       135deg,
-      #ffd9ea 0%,
-      #fbbfda 16%,
-      #f2c4ef 32%,
-      #d6ccff 46%,
-      #ffe4d4 62%,
-      #ffc4de 78%,
-      #e4cfff 100%
+      #ffbfd0 0%,
+      #ffb3c7 30%,
+      #ffadc6 48%,
+      #f9b4d6 62%,
+      #ffb8c4 80%,
+      #ffc1d2 100%
     );
-  background-size:
-    100% 100%,
-    260% 260%;
-  animation: pay-iri 9s ease-in-out infinite;
+  background-size: 100% 100%, 260% 260%;
+  animation: pay-iri 12s ease-in-out infinite;
 }
 
 /* Lámina holográfica que sigue al cursor */
@@ -653,6 +650,7 @@
   );
   background-size: 220% 220%;
   mix-blend-mode: soft-light;
+  opacity: 0.6;
   transition: background-position 0.25s ease-out;
 }
 

@@ -193,7 +193,7 @@ export function CardIssuance() {
           {flipped ? "Ver frente" : "Ver reverso"}
         </button>
         <p className="max-w-xs text-center text-xs leading-relaxed text-ink-soft">
-          Mueve el cursor sobre la tarjeta para ver el efecto tornasol, o tócala para girarla.
+          Mueve el cursor sobre la tarjeta para ver el brillo, o tócala para girarla.
         </p>
       </div>
 
