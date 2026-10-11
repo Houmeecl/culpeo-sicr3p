@@ -1,15 +1,25 @@
+/** Colores del manual de marca SICR3P/. El rosado es sólo de la tarjeta y de la chancha. */
 export const WORLD = {
-  background: "#F6ECF4",
+  background: "#EEF3FA",
   island: "#FFFFFF",
-  islandSide: "#EADCEB",
+  islandSide: "#DCE4EF",
   tray: "#D9D3CA",
-  ink: "#111114",
-  stone: "#D9CCDB",
-  tileOff: "#EEE2EE",
+  ink: "#0F1B3D",
+  stone: "#CBD3E0",
+  tileOff: "#E6ECF5",
+  /** Violeta SICR3P/: estaciones, ruta y anillo de conexión. */
+  accent: "#6B5CF6",
+  accentSoft: "#CFC9FF",
+  /** Verde Sostenible. */
+  green: "#00B67A",
+  lightBlue: "#E6F0FF",
+  mountain: "#DCE4F2",
+  mountainAlt: "#E6ECF7",
+  /** Personaje chancha rosa (no se usa en la interfaz). */
   pink: "#FF8FB3",
   pinkSoft: "#FFC2D4",
   pinkDeep: "#E9628E",
-  tree: "#BFD8C4",
+  tree: "#B9DCC9",
   trunk: "#B79C82",
   culpeo: "#E07A3F",
   cream: "#F6E7D3",

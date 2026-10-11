@@ -169,9 +169,12 @@ No hay entidad "nivel" ni "tier". Las capacidades son explícitas por cuenta.
 
 ## 7. Diseño visual de cada escena
 
-Dirección: maqueta clara sobre fondo cálido neutro (#F4F1EC), geometría redondeada, materiales
-mate (`MeshStandardMaterial`, roughness 0.6–0.9), una luz direccional suave + hemisférica, sombras
-suaves. Rosa diferenciador (#FF8FB3 / #FFB3C7), negro #111114, blanco y grises. Texto Inter, mínimo
+Dirección: SICR3P/ es un producto financiero, por lo que la interfaz usa los colores del manual
+de marca para transmitir confianza: Azul Profundo #0F1B3D (texto y botones principales), Violeta
+SICR3P/ #6B5CF6 (acentos, estaciones, ruta), Verde Sostenible #00B67A (confirmaciones), Azul Claro
+#E6F0FF y Gris Neutro #F4F6F9 (fondos). **El rosado se reserva sólo para la tarjeta** (y para la
+chancha rosa como personaje). Maqueta clara, geometría redondeada, materiales mate, luz suave.
+Texto Inter, mínimo
 16 px en móvil. Movimiento lento (transiciones de cámara 1,4–2 s, `easeInOutCubic`).
 
 | Escena          | Composición                                                                                                                                                               |

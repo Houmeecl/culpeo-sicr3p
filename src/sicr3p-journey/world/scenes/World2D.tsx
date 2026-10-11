@@ -70,13 +70,13 @@ export function World2D(props: WorldViewProps) {
               onClick={lit ? () => onStationSelect(SCENES[i].id) : undefined}
               style={lit ? { cursor: "pointer" } : undefined}
             >
-              <ellipse cx={x} cy={y} rx="17" ry="8" fill={lit ? WORLD.pink : WORLD.tileOff} />
+              <ellipse cx={x} cy={y} rx="17" ry="8" fill={lit ? WORLD.accent : WORLD.tileOff} />
               <rect x={x - 2} y={y - 30} width="4" height="28" fill={WORLD.stone} />
               <circle
                 cx={x}
                 cy={y - 32}
                 r="6"
-                fill={lit ? WORLD.pink : "#fff"}
+                fill={lit ? WORLD.accent : "#fff"}
                 stroke={WORLD.stone}
               />
             </g>
@@ -92,7 +92,7 @@ export function World2D(props: WorldViewProps) {
                   cy={y}
                   rx="7"
                   ry="3.5"
-                  fill={i < trail[0] ? WORLD.pink : WORLD.tileOff}
+                  fill={i < trail[0] ? WORLD.accent : WORLD.tileOff}
                 />
               );
             })
@@ -104,7 +104,7 @@ export function World2D(props: WorldViewProps) {
           rx="34"
           ry="34"
           fill="none"
-          stroke={WORLD.pink}
+          stroke={WORLD.accent}
           strokeWidth="12"
         />
         {walker && scene === "path" ? (

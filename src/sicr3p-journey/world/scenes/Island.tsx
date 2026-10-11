@@ -11,7 +11,7 @@ export function Island() {
       Array.from({ length: STATION_COUNT }, (_, i) => {
         const [x, z] = ringPoint(i + 0.5, 5.6);
         const house = i % 2 === 0;
-        const roofs = [WORLD.pink, WORLD.ink, WORLD.pinkSoft];
+        const roofs = [WORLD.accent, WORLD.ink, WORLD.lightBlue];
         return {
           x,
           z,
@@ -81,13 +81,13 @@ export function Connection({ still }: { still: boolean }) {
       </mesh>
       <mesh ref={ref} position={[0, 1.55, 0]} castShadow>
         <torusGeometry args={[0.55, 0.16, 24, 64]} />
-        <meshStandardMaterial color={WORLD.pink} roughness={0.45} />
+        <meshStandardMaterial color={WORLD.accent} roughness={0.45} />
       </mesh>
     </group>
   );
 }
 
-/** Cordillera lavanda alrededor de la maqueta (guiño a Antofagasta). */
+/** Cordillera azul grisácea alrededor de la maqueta (guiño a Antofagasta). */
 export function Mountains() {
   const peaks = useMemo(
     () =>
@@ -99,7 +99,7 @@ export function Mountains() {
           z: Math.sin(a) * r,
           h: 3 + ((i * 5) % 4) * 0.9,
           w: 3 + (i % 3) * 0.7,
-          color: i % 2 ? "#F0E2F3" : "#F6EAF6",
+          color: i % 2 ? WORLD.mountain : WORLD.mountainAlt,
         };
       }),
     [],

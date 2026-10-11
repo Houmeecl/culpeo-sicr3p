@@ -72,8 +72,8 @@ function Station({
       <mesh receiveShadow>
         <cylinderGeometry args={[0.36, 0.36, 0.06, 28]} />
         <meshStandardMaterial
-          color={lit ? WORLD.pink : WORLD.tileOff}
-          emissive={lit ? WORLD.pink : "#000000"}
+          color={lit ? WORLD.accent : WORLD.tileOff}
+          emissive={lit ? WORLD.accent : "#000000"}
           emissiveIntensity={lit ? 0.35 : 0}
           roughness={0.6}
         />
@@ -85,8 +85,8 @@ function Station({
       <mesh ref={lamp} position={[0, 0.68, 0]}>
         <sphereGeometry args={[0.11, 16, 16]} />
         <meshStandardMaterial
-          color={on ? WORLD.pink : WORLD.island}
-          emissive={on ? WORLD.pink : "#000000"}
+          color={on ? WORLD.accent : WORLD.island}
+          emissive={on ? WORLD.accent : "#000000"}
           emissiveIntensity={on ? 0.9 : 0}
         />
       </mesh>
@@ -105,8 +105,8 @@ export function TrailTiles({ from, count, lit }: { from: number; count: number; 
           <mesh key={i} position={[x, 0.22, z]} receiveShadow>
             <cylinderGeometry args={[0.13, 0.13, 0.05, 20]} />
             <meshStandardMaterial
-              color={on ? WORLD.pink : WORLD.tileOff}
-              emissive={on ? WORLD.pink : "#000000"}
+              color={on ? WORLD.accent : WORLD.tileOff}
+              emissive={on ? WORLD.accent : "#000000"}
               emissiveIntensity={on ? 0.5 : 0}
             />
           </mesh>
