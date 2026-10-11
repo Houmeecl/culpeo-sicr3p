@@ -18,9 +18,9 @@
   --color-mountain-deep: #8f4e32;
   --color-success: #2f6b4f;
   --color-danger: #9a3b2f;
-  --color-orchid: #a3125f;
-  --color-orchid-deep: #7d0d49;
-  --color-orchid-soft: #fbe3f1;
+  --color-violet: #6b5cf6;
+  --color-violet-deep: #4b3bd1;
+  --color-violet-soft: #efedff;
 
   --font-display: "Outfit", "Segoe UI", system-ui, sans-serif;
   --font-sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -33,12 +33,10 @@
   --radius-2xl: 36px;
 
   --shadow-border:
-    0px 0px 0px 1px rgba(20, 48, 79, 0.06),
-    0px 1px 2px -1px rgba(20, 48, 79, 0.06),
+    0px 0px 0px 1px rgba(20, 48, 79, 0.06), 0px 1px 2px -1px rgba(20, 48, 79, 0.06),
     0px 8px 24px -12px rgba(20, 48, 79, 0.12);
   --shadow-border-hover:
-    0px 0px 0px 1px rgba(20, 48, 79, 0.1),
-    0px 1px 2px -1px rgba(20, 48, 79, 0.08),
+    0px 0px 0px 1px rgba(20, 48, 79, 0.1), 0px 1px 2px -1px rgba(20, 48, 79, 0.08),
     0px 12px 28px -12px rgba(20, 48, 79, 0.16);
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -536,7 +534,7 @@
   }
 }
 
-/* ── Tarjeta prepago tornasol ─────────────────────────────── */
+/* ── Tarjeta soportada rosa perla tornasol ─────────────────────────────── */
 @keyframes pay-bob {
   0%,
   100% {
@@ -549,13 +547,19 @@
 
 @keyframes pay-iri {
   0% {
-    background-position: 0% 0%, 0% 50%;
+    background-position:
+      0% 0%,
+      0% 50%;
   }
   50% {
-    background-position: 0% 0%, 100% 50%;
+    background-position:
+      0% 0%,
+      100% 50%;
   }
   100% {
-    background-position: 0% 0%, 0% 50%;
+    background-position:
+      0% 0%,
+      0% 50%;
   }
 }
 
@@ -606,11 +610,11 @@
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background-color: #f6b3dc;
+  background-color: #f9cfe2;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.6) inset,
     0 0 0 1px rgba(255, 255, 255, 0.45) inset,
-    0 30px 50px -28px rgba(120, 20, 90, 0.55);
+    0 30px 50px -28px rgba(15, 27, 61, 0.45);
 }
 
 /* Base tornasol: rosa → lila → celeste → durazno, desplazándose */
@@ -621,15 +625,17 @@
     radial-gradient(120% 70% at 15% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
     linear-gradient(
       135deg,
-      #ffc2e2 0%,
-      #f7a8d6 18%,
-      #d6b4ff 38%,
-      #a9e6ff 54%,
-      #ffe2c4 70%,
-      #ffb3da 86%,
-      #e9b6ff 100%
+      #ffd9ea 0%,
+      #fbbfda 16%,
+      #f2c4ef 32%,
+      #d6ccff 46%,
+      #ffe4d4 62%,
+      #ffc4de 78%,
+      #e4cfff 100%
     );
-  background-size: 100% 100%, 260% 260%;
+  background-size:
+    100% 100%,
+    260% 260%;
   animation: pay-iri 9s ease-in-out infinite;
 }
 
@@ -639,11 +645,11 @@
   inset: 0;
   background-image: repeating-linear-gradient(
     115deg,
-    rgba(255, 60, 170, 0.22) 0%,
-    rgba(80, 210, 255, 0.22) 9%,
-    rgba(255, 238, 130, 0.2) 18%,
-    rgba(160, 120, 255, 0.22) 27%,
-    rgba(255, 60, 170, 0.22) 36%
+    rgba(255, 120, 190, 0.24) 0%,
+    rgba(150, 130, 255, 0.24) 9%,
+    rgba(255, 225, 160, 0.22) 18%,
+    rgba(140, 235, 205, 0.2) 27%,
+    rgba(255, 120, 190, 0.24) 36%
   );
   background-size: 220% 220%;
   mix-blend-mode: soft-light;
@@ -691,7 +697,7 @@
 }
 
 .pay-card-flip:focus-visible {
-  outline: 3px solid #a3125f;
+  outline: 3px solid #6b5cf6;
   outline-offset: 8px;
   border-radius: 28px;
 }

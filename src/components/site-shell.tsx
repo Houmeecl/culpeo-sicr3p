@@ -98,7 +98,7 @@ function SiteFooter() {
             Tablero de solicitudes
           </Link>
           <Link to="/tarjeta" className="hover:text-paper">
-            Tarjeta prepago
+            Tarjeta soportada
           </Link>
         </div>
         <p className="mt-8 text-xs uppercase tracking-[0.14em] text-paper/50">

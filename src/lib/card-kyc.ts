@@ -1,4 +1,4 @@
-// Emisión de tarjeta prepago con KYC — MODO DEMOSTRACIÓN.
+// Emisión de tarjeta soportada sicr3p/ con KYC — MODO DEMOSTRACIÓN.
 // Sin proveedor KYC ni procesador de tarjetas conectado: la verificación,
 // el puntaje de riesgo y la tokenización de wallet se simulan en el navegador.
 

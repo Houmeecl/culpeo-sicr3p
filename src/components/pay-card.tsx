@@ -5,9 +5,10 @@ import { groupPan } from "@/lib/card-kyc";
 const W = 432;
 const H = 685;
 
-const INK = "#3a0f2e";
-const SUB = "#7a3a63";
-const ACCENT = "#a3125f";
+const INK = "#0F1B3D";
+const SUB = "#4A3F6B";
+const ACCENT = "#6B5CF6";
+const FONT = "'Inter', system-ui, sans-serif";
 
 export type PayCardProps = {
   holder: string;
@@ -141,7 +142,7 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
               }}
             >
               {/* FRENTE */}
-              <div className="pay-card-face" style={{ color: INK }}>
+              <div className="pay-card-face" style={{ color: INK, fontFamily: FONT }}>
                 <div className="pay-card-iri" aria-hidden="true" />
                 <div
                   className="pay-card-foil"
@@ -169,7 +170,7 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                     width: 430,
                     height: 430,
                     borderRadius: "50%",
-                    background: "rgba(214,70,160,0.22)",
+                    background: "rgba(107,92,246,0.16)",
                   }}
                 />
                 <div
@@ -237,20 +238,33 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                   </div>
                   <div
                     style={{
-                      marginTop: 92,
+                      marginTop: 88,
                       fontWeight: 800,
-                      fontSize: 82,
-                      letterSpacing: -3.5,
+                      fontSize: 86,
+                      letterSpacing: -4,
                       lineHeight: 1,
                     }}
                   >
-                    AndCo<span style={{ color: ACCENT }}>.</span>
+                    sicr<span style={{ color: ACCENT }}>3</span>p
+                    <span style={{ color: ACCENT }}>/</span>
                   </div>
-                  <div style={{ marginTop: 22, display: "flex", alignItems: "center", gap: 16 }}>
-                    <span style={{ width: 2, height: 44, background: INK, opacity: 0.55 }} />
-                    <span style={{ fontWeight: 800, fontSize: 44, letterSpacing: -1.5 }}>
-                      sicr<span style={{ color: ACCENT }}>3</span>p
-                      <span style={{ color: ACCENT }}>/</span>
+                  <div
+                    style={{
+                      marginTop: 18,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 14,
+                      fontSize: 19,
+                      fontWeight: 600,
+                      letterSpacing: -0.3,
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    <span style={{ width: 2, height: 46, background: ACCENT, borderRadius: 2 }} />
+                    <span>
+                      Desarrollamos empresas.
+                      <br />
+                      Acercamos soluciones.
                     </span>
                   </div>
                   <div
@@ -331,14 +345,17 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                   style={{
                     position: "absolute",
                     inset: 0,
-                    background: `radial-gradient(circle at ${tilt.gx}% ${tilt.gy}%, rgba(255,255,255,0.42), rgba(255,255,255,0) 45%)`,
+                    background: `radial-gradient(circle at ${tilt.gx}% ${tilt.gy}%, rgba(255,255,255,0.26), rgba(255,255,255,0) 45%)`,
                     pointerEvents: "none",
                   }}
                 />
               </div>
 
               {/* REVERSO */}
-              <div className="pay-card-face" style={{ color: INK, transform: "rotateY(180deg)" }}>
+              <div
+                className="pay-card-face"
+                style={{ color: INK, fontFamily: FONT, transform: "rotateY(180deg)" }}
+              >
                 <div className="pay-card-iri" aria-hidden="true" />
                 <div
                   className="pay-card-foil"
@@ -366,7 +383,7 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                     width: 430,
                     height: 430,
                     borderRadius: "50%",
-                    background: "rgba(214,70,160,0.22)",
+                    background: "rgba(107,92,246,0.16)",
                   }}
                 />
                 <div
@@ -378,7 +395,7 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                     top: 0,
                     width: 102,
                     height: H,
-                    backgroundColor: "#2a0a22",
+                    backgroundColor: "#0F1B3D",
                     boxShadow:
                       "inset 2px 0 0 rgba(255,255,255,0.12), inset -2px 0 0 rgba(0,0,0,0.35)",
                   }}
@@ -411,7 +428,7 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                         fontWeight: 500,
                         letterSpacing: 3,
                         whiteSpace: "nowrap",
-                        textShadow: "0 1px 0 rgba(255,255,255,0.7), 0 -1px 0 rgba(58,15,46,0.3)",
+                        textShadow: "0 1px 0 rgba(255,255,255,0.7), 0 -1px 0 rgba(15,27,61,0.3)",
                       }}
                     >
                       {shownPan}
@@ -452,17 +469,13 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                      <span style={{ fontWeight: 800, fontSize: 18, letterSpacing: -0.5 }}>
-                        AndCo<span style={{ color: ACCENT }}>.</span>
-                      </span>
-                      <span style={{ width: 1, height: 15, background: INK, opacity: 0.45 }} />
-                      <span style={{ fontWeight: 700, fontSize: 14 }}>
+                      <span style={{ fontWeight: 800, fontSize: 20, letterSpacing: -0.8 }}>
                         sicr<span style={{ color: ACCENT }}>3</span>p
                         <span style={{ color: ACCENT }}>/</span>
                       </span>
                     </div>
                     <span style={{ fontSize: 8, letterSpacing: 2.2, fontWeight: 600, color: SUB }}>
-                      PREPAGO
+                      SOPORTADA
                     </span>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -473,19 +486,19 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                         style={{
                           flex: "1 1 auto",
                           background:
-                            "repeating-linear-gradient(135deg, #FFFFFF 0px, #FFFFFF 5px, #F6E4F0 5px, #F6E4F0 10px)",
+                            "repeating-linear-gradient(135deg, #FFFFFF 0px, #FFFFFF 5px, #F1EEFF 5px, #F1EEFF 10px)",
                         }}
                       />
                       <div
                         style={{
                           width: 60,
                           background: "#FFFFFF",
-                          color: "#2a0a22",
+                          color: "#0F1B3D",
                           display: "flex",
                           flexDirection: "column",
                           justifyContent: "center",
                           alignItems: "center",
-                          borderLeft: "1px solid #EBCFE0",
+                          borderLeft: "1px solid #DDD8F5",
                         }}
                       >
                         <span
@@ -493,7 +506,7 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                             fontSize: 8,
                             letterSpacing: 1.5,
                             fontWeight: 600,
-                            color: "#5c2a4a",
+                            color: "#4A3F6B",
                           }}
                         >
                           CVC
@@ -523,11 +536,11 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                         }}
                       >
                         {qr.map((on, i) => (
-                          <div key={i} style={{ background: on ? "#2a0a22" : "transparent" }} />
+                          <div key={i} style={{ background: on ? "#0F1B3D" : "transparent" }} />
                         ))}
                       </div>
                     </div>
-                    <span style={{ fontSize: 10, lineHeight: 1.4, color: "#4a1d3c" }}>
+                    <span style={{ fontSize: 10, lineHeight: 1.4, color: "#2c2950" }}>
                       Código ilustrativo. Tarjeta de demostración, no válida en redes de pago.
                     </span>
                   </div>
@@ -563,10 +576,8 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                     <ContactRow
                       icon="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"
                       circle
-                      text="andco.cl"
+                      text="proveedorregional.cl"
                     />
-                    <ContactRow icon="M4 14v-2a8 8 0 0 1 16 0v2" text="600 123 4567" />
-                    <ContactRow icon="M3 7l9 6 9-6" rect text="soporte@andco.cl" />
                   </div>
                   <div
                     style={{ marginTop: "auto", display: "flex", alignItems: "flex-end", gap: 12 }}
@@ -579,13 +590,13 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                         flex: "0 0 auto",
                         borderRadius: 6,
                         background:
-                          "conic-gradient(from 30deg, #ff7bc0, #8fd8ff, #ffe39a, #c9a3ff, #ff7bc0)",
+                          "conic-gradient(from 30deg, #ff9ccb, #b9a8ff, #ffe1a8, #9fe8cf, #ff9ccb)",
                         boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.7)",
                       }}
                     />
-                    <span style={{ fontSize: 8, lineHeight: 1.45, color: "#4a1d3c" }}>
-                      Emitida por AndCo SpA en alianza con sicr3p/. Uso sujeto a términos y
-                      condiciones.
+                    <span style={{ fontSize: 8, lineHeight: 1.45, color: "#2c2950" }}>
+                      Tarjeta soportada por sicr3p/, una iniciativa de Proveedor Regional. Uso
+                      sujeto a términos y condiciones.
                     </span>
                   </div>
                 </div>
@@ -595,7 +606,7 @@ export function PayCard({ holder, pan, expiry, cvc, flipped, onFlip, status }: P
                   style={{
                     position: "absolute",
                     inset: 0,
-                    background: `radial-gradient(circle at ${100 - tilt.gx}% ${tilt.gy}%, rgba(255,255,255,0.38), rgba(255,255,255,0) 45%)`,
+                    background: `radial-gradient(circle at ${100 - tilt.gx}% ${tilt.gy}%, rgba(255,255,255,0.24), rgba(255,255,255,0) 45%)`,
                     pointerEvents: "none",
                   }}
                 />

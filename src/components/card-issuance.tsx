@@ -184,7 +184,7 @@ export function CardIssuance() {
         <button
           type="button"
           onClick={() => setFlipped((f) => !f)}
-          className="inline-flex h-11 items-center gap-2 rounded-full bg-orchid px-5 text-sm font-medium text-white transition-transform duration-150 ease-out active:scale-[0.96]"
+          className="inline-flex h-11 items-center gap-2 rounded-full bg-violet px-5 text-sm font-medium text-white transition-transform duration-150 ease-out active:scale-[0.96]"
         >
           <RotateCcw className="size-4" />
           {flipped ? "Ver frente" : "Ver reverso"}
@@ -277,7 +277,7 @@ export function CardIssuance() {
                   type="checkbox"
                   checked={form.pep}
                   onChange={(e) => patch("pep", e.target.checked)}
-                  className="mt-0.5 size-4 accent-orchid"
+                  className="mt-0.5 size-4 accent-violet"
                 />
                 <span>Soy una persona expuesta políticamente (PEP) o familiar directo de una.</span>
               </label>
@@ -298,7 +298,7 @@ export function CardIssuance() {
                       {state === "ok" ? (
                         <BadgeCheck className="size-5 text-success" />
                       ) : state === "run" ? (
-                        <Loader2 className="size-5 animate-spin text-orchid" />
+                        <Loader2 className="size-5 animate-spin text-violet" />
                       ) : (
                         <CircleDashed className="size-5 text-ink-soft/60" />
                       )}
@@ -315,7 +315,7 @@ export function CardIssuance() {
                     setConsent(e.target.checked);
                     setConsentError("");
                   }}
-                  className="mt-0.5 size-4 accent-orchid"
+                  className="mt-0.5 size-4 accent-violet"
                 />
                 <span>
                   Autorizo el tratamiento de mis datos personales para verificar mi identidad y
@@ -402,7 +402,7 @@ function Stepper({ step }: { step: number }) {
             className={cn(
               "flex size-7 items-center justify-center rounded-full text-xs font-semibold",
               i < step && "bg-success text-white",
-              i === step && "bg-orchid text-white",
+              i === step && "bg-violet text-white",
               i > step && "bg-sand text-ink-soft",
             )}
             aria-current={i === step ? "step" : undefined}
@@ -468,7 +468,7 @@ function Nav({
         type="button"
         onClick={onNext}
         disabled={disabled}
-        className="inline-flex h-11 items-center gap-2 rounded-full bg-orchid px-5 text-sm font-medium text-white transition-transform duration-150 ease-out active:scale-[0.96] disabled:opacity-60"
+        className="inline-flex h-11 items-center gap-2 rounded-full bg-violet px-5 text-sm font-medium text-white transition-transform duration-150 ease-out active:scale-[0.96] disabled:opacity-60"
       >
         {nextLabel}
         <ArrowRight className="size-4" />
@@ -500,7 +500,7 @@ function SelectBox({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          "h-11 rounded-md bg-paper px-3 text-sm text-ink outline-none ring-1 ring-line transition-[box-shadow] duration-150 focus:ring-2 focus:ring-orchid/40",
+          "h-11 rounded-md bg-paper px-3 text-sm text-ink outline-none ring-1 ring-line transition-[box-shadow] duration-150 focus:ring-2 focus:ring-violet/40",
           error && "ring-danger/50",
         )}
       >
@@ -527,7 +527,7 @@ function RiskSummary({ risk }: { risk: RiskAssessment }) {
   return (
     <div className="rounded-lg bg-paper p-4 ring-1 ring-line">
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        <ShieldCheck className="size-5 text-orchid" />
+        <ShieldCheck className="size-5 text-violet" />
         <span className="font-medium text-navy">Resultado KYC</span>
         <span
           className={cn(
@@ -617,19 +617,19 @@ function WalletPanel({
 
       {provisioning ? (
         <div
-          className="rounded-lg bg-orchid-soft p-4 ring-1 ring-orchid/20"
+          className="rounded-lg bg-violet-soft p-4 ring-1 ring-violet/20"
           role="group"
           aria-label="Verificación de wallet"
         >
           <div className="flex items-start gap-3">
-            <Smartphone className="mt-0.5 size-5 shrink-0 text-orchid" />
+            <Smartphone className="mt-0.5 size-5 shrink-0 text-violet" />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-navy">
                 Confirma el alta en {walletLabel(provisioning.kind)}
               </p>
               <p className="mt-1 text-xs leading-relaxed text-ink-soft">
                 Un emisor real enviaría un SMS. En la demostración, el código es{" "}
-                <strong className="font-mono text-sm text-orchid-deep">{provisioning.code}</strong>.
+                <strong className="font-mono text-sm text-violet-deep">{provisioning.code}</strong>.
               </p>
               <div className="mt-3 flex flex-wrap items-start gap-2">
                 <div className="flex flex-col gap-1">
@@ -640,7 +640,7 @@ function WalletPanel({
                     value={otp}
                     onChange={(e) => onOtp(e.target.value)}
                     placeholder="000000"
-                    className="h-11 w-36 rounded-md bg-paper-raised px-3 font-mono text-base tracking-[0.3em] text-ink outline-none ring-1 ring-line focus:ring-2 focus:ring-orchid/40"
+                    className="h-11 w-36 rounded-md bg-paper-raised px-3 font-mono text-base tracking-[0.3em] text-ink outline-none ring-1 ring-line focus:ring-2 focus:ring-violet/40"
                   />
                   {otpError ? (
                     <p className="text-xs text-danger" role="alert">
@@ -651,7 +651,7 @@ function WalletPanel({
                 <button
                   type="button"
                   onClick={onConfirm}
-                  className="h-11 rounded-full bg-orchid px-5 text-sm font-medium text-white transition-transform duration-150 active:scale-[0.96]"
+                  className="h-11 rounded-full bg-violet px-5 text-sm font-medium text-white transition-transform duration-150 active:scale-[0.96]"
                 >
                   Confirmar
                 </button>
