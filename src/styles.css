@@ -18,6 +18,9 @@
   --color-mountain-deep: #8f4e32;
   --color-success: #2f6b4f;
   --color-danger: #9a3b2f;
+  --color-violet: #6b5cf6;
+  --color-violet-deep: #4b3bd1;
+  --color-violet-soft: #efedff;
 
   --font-display: "Outfit", "Segoe UI", system-ui, sans-serif;
   --font-sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -30,12 +33,10 @@
   --radius-2xl: 36px;
 
   --shadow-border:
-    0px 0px 0px 1px rgba(20, 48, 79, 0.06),
-    0px 1px 2px -1px rgba(20, 48, 79, 0.06),
+    0px 0px 0px 1px rgba(20, 48, 79, 0.06), 0px 1px 2px -1px rgba(20, 48, 79, 0.06),
     0px 8px 24px -12px rgba(20, 48, 79, 0.12);
   --shadow-border-hover:
-    0px 0px 0px 1px rgba(20, 48, 79, 0.1),
-    0px 1px 2px -1px rgba(20, 48, 79, 0.08),
+    0px 0px 0px 1px rgba(20, 48, 79, 0.1), 0px 1px 2px -1px rgba(20, 48, 79, 0.08),
     0px 12px 28px -12px rgba(20, 48, 79, 0.16);
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -530,5 +531,410 @@
   footer,
   .pulse-ring {
     display: none !important;
+  }
+}
+
+/* ── Tarjeta soportada rosa pastel ─────────────────────────────── */
+@keyframes pay-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pay-iri {
+  0% {
+    background-position:
+      0% 0%,
+      0% 50%;
+  }
+  50% {
+    background-position:
+      0% 0%,
+      100% 50%;
+  }
+  100% {
+    background-position:
+      0% 0%,
+      0% 50%;
+  }
+}
+
+@keyframes pay-sheen {
+  0% {
+    background-position: 160% 0;
+  }
+  55%,
+  100% {
+    background-position: -60% 0;
+  }
+}
+
+@keyframes pay-wave {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+@keyframes pay-holo {
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes pay-gloss {
+  0% {
+    background-position: 0 -120%;
+  }
+  60%,
+  100% {
+    background-position: 0 220%;
+  }
+}
+
+.pay-card-bob {
+  animation: pay-bob 6s ease-in-out infinite;
+}
+
+.pay-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background-color: #ffb3c7;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.45) inset,
+    0 30px 50px -28px rgba(15, 27, 61, 0.45);
+}
+
+/* Rosa pastel mate con un velo tornasol muy sutil */
+.pay-card-iri {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(120% 60% at 20% 0%, rgba(255, 255, 255, 0.35), transparent 60%),
+    linear-gradient(
+      135deg,
+      #ffbfd0 0%,
+      #ffb3c7 30%,
+      #ffadc6 48%,
+      #f9b4d6 62%,
+      #ffb8c4 80%,
+      #ffc1d2 100%
+    );
+  background-size: 100% 100%, 260% 260%;
+  animation: pay-iri 12s ease-in-out infinite;
+}
+
+/* Lámina holográfica que sigue al cursor */
+.pay-card-foil {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(255, 120, 190, 0.24) 0%,
+    rgba(150, 130, 255, 0.24) 9%,
+    rgba(255, 225, 160, 0.22) 18%,
+    rgba(140, 235, 205, 0.2) 27%,
+    rgba(255, 120, 190, 0.24) 36%
+  );
+  background-size: 220% 220%;
+  mix-blend-mode: soft-light;
+  opacity: 0.6;
+  transition: background-position 0.25s ease-out;
+}
+
+.pay-card-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  background-size: 260% 100%;
+  mix-blend-mode: soft-light;
+  animation: pay-sheen 5.5s ease-in-out infinite;
+}
+
+.pay-card-gloss {
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 100% 40%;
+  background-repeat: no-repeat;
+  animation: pay-gloss 4s ease-in-out infinite;
+}
+
+.pay-card-holo {
+  animation: pay-holo 6s linear infinite;
+}
+
+.pay-card-wave.w1 {
+  animation: pay-wave 1.8s ease-in-out infinite;
+}
+.pay-card-wave.w2 {
+  animation: pay-wave 1.8s ease-in-out 0.2s infinite;
+}
+.pay-card-wave.w3 {
+  animation: pay-wave 1.8s ease-in-out 0.4s infinite;
+}
+
+.pay-card-flip:focus-visible {
+  outline: 3px solid #6b5cf6;
+  outline-offset: 8px;
+  border-radius: 28px;
+}
+
+/* ── Escena 3D detrás de la tarjeta ───────────────────────── */
+.stage3d {
+  --px: 0;
+  --py: 0;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-2xl);
+  padding: 48px 24px 40px;
+  display: flex;
+  justify-content: center;
+  background:
+    radial-gradient(90% 60% at 50% 0%, #3b2f9a 0%, rgba(59, 47, 154, 0) 70%),
+    radial-gradient(70% 50% at 85% 85%, rgba(255, 140, 200, 0.28), rgba(255, 140, 200, 0) 70%),
+    linear-gradient(180deg, #16215a 0%, #0f1b3d 55%, #0a1230 100%);
+  box-shadow:
+    0 0 0 1px rgba(107, 92, 246, 0.25),
+    0 40px 80px -40px rgba(15, 27, 61, 0.7);
+}
+
+.stage3d-world {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  perspective: 900px;
+  perspective-origin: 50% 35%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+@keyframes stage3d-grid {
+  to {
+    background-position:
+      0 44px,
+      0 0;
+  }
+}
+
+.stage3d-floor {
+  position: absolute;
+  left: -60%;
+  right: -60%;
+  bottom: -6%;
+  height: 62%;
+  transform-origin: 50% 100%;
+  transform: rotateX(74deg);
+  background-image:
+    linear-gradient(rgba(140, 124, 255, 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140, 124, 255, 0.55) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to top, #000 15%, transparent 92%);
+  animation: stage3d-grid 3.5s linear infinite;
+}
+
+.stage3d-glow {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 78%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 160, 210, 0.55), rgba(107, 92, 246, 0.35) 45%, transparent 70%);
+  filter: blur(40px);
+}
+
+.stage3d-shape {
+  position: absolute;
+  transform-style: preserve-3d;
+  --d: 1;
+  translate: calc(var(--px) * var(--d) * -46px) calc(var(--py) * var(--d) * -32px);
+  transition: translate 0.35s var(--ease-out);
+}
+.stage3d-shape[data-depth="2"] {
+  --d: 1.8;
+}
+.stage3d-shape[data-depth="3"] {
+  --d: 2.6;
+}
+.stage3d-shape[data-depth="4"] {
+  --d: 3.4;
+}
+
+@keyframes stage3d-spin {
+  0%,
+  100% {
+    transform: translateY(0) rotateX(18deg) rotateY(-28deg) rotateZ(var(--rz, 0deg));
+  }
+  50% {
+    transform: translateY(-16px) rotateX(-10deg) rotateY(32deg) rotateZ(var(--rz, 0deg));
+  }
+}
+
+@keyframes stage3d-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-18px);
+  }
+}
+
+/* Barras extruidas: 4 capas apiladas en Z dan grosor real al girar */
+.stage3d-slash {
+  width: 64px;
+  height: 150px;
+  animation: stage3d-spin 9s ease-in-out infinite;
+}
+.stage3d-slash i {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  transform: skewX(-24deg) translateZ(calc(var(--l) * -5px));
+}
+.stage3d-slash i:nth-child(1) {
+  --l: 0;
+}
+.stage3d-slash i:nth-child(2) {
+  --l: 1;
+  filter: brightness(0.75);
+}
+.stage3d-slash i:nth-child(3) {
+  --l: 2;
+  filter: brightness(0.6);
+}
+.stage3d-slash i:nth-child(4) {
+  --l: 3;
+  filter: brightness(0.45);
+}
+
+.stage3d-slash--violet {
+  left: 6%;
+  top: 9%;
+  --rz: -8deg;
+}
+.stage3d-slash--violet i {
+  background: linear-gradient(160deg, #a497ff 0%, #6b5cf6 45%, #4b3bd1 100%);
+}
+.stage3d-slash--violet i:nth-child(1) {
+  box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.35);
+}
+
+.stage3d-slash--blue {
+  right: 4%;
+  bottom: 14%;
+  width: 52px;
+  height: 124px;
+  --rz: 12deg;
+  animation-duration: 11s;
+  animation-delay: -3s;
+}
+.stage3d-slash--blue i {
+  transform: skewX(24deg) translateZ(calc(var(--l) * -5px));
+  background: linear-gradient(160deg, #8fb0ff 0%, #4f6cf0 50%, #2c3fb8 100%);
+}
+.stage3d-slash--blue i:nth-child(1) {
+  box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Esferas con luz cenital y sombra propia */
+.stage3d-sphere {
+  right: 7%;
+  top: 30%;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 28%,
+    #c8ffe9 0%,
+    #3fe0a6 18%,
+    #00b67a 48%,
+    #00704b 80%,
+    #003d29 100%
+  );
+  box-shadow:
+    0 24px 30px -14px rgba(0, 0, 0, 0.55),
+    inset -6px -8px 14px rgba(0, 40, 25, 0.45);
+  animation: stage3d-float 7s ease-in-out infinite;
+}
+.stage3d-sphere--small {
+  right: auto;
+  left: 14%;
+  top: auto;
+  bottom: 24%;
+  width: 34px;
+  height: 34px;
+  background: radial-gradient(circle at 32% 28%, #fff 0%, #ffc6e2 22%, #f58cc0 55%, #b84a86 100%);
+  animation-duration: 5.5s;
+  animation-delay: -2s;
+}
+
+.stage3d-ring {
+  left: 64%;
+  top: 5%;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 9px solid transparent;
+  background:
+    linear-gradient(#0f1b3d, #0f1b3d) padding-box,
+    conic-gradient(from 200deg, #ffd1e8, #b9a8ff, #6b5cf6, #ffd1e8) border-box;
+  opacity: 0.85;
+  animation: stage3d-spin 13s ease-in-out infinite reverse;
+}
+
+.stage3d-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: min(290px, 68vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stage3d-shadow {
+  margin-top: 18px;
+  width: 78%;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(5, 8, 25, 0.75);
+  filter: blur(12px);
+  animation: stage3d-shadow 6s ease-in-out infinite;
+}
+
+@keyframes stage3d-shadow {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scaleX(0.86);
+    opacity: 0.5;
   }
 }

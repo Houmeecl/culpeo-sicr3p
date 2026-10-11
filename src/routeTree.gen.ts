@@ -14,6 +14,7 @@ import { Route as EmbedRouteImport } from './routes/embed'
 import { Route as IncorporarRouteImport } from './routes/incorporar'
 import { Route as SeleccionRouteImport } from './routes/seleccion'
 import { Route as TableroRouteImport } from './routes/tablero'
+import { Route as TarjetaRouteImport } from './routes/tarjeta'
 import { Route as ComprobanteFolioRouteImport } from './routes/comprobante.$folio'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const TableroRoute = TableroRouteImport.update({
   path: '/tablero',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TarjetaRoute = TarjetaRouteImport.update({
+  id: '/tarjeta',
+  path: '/tarjeta',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ComprobanteFolioRoute = ComprobanteFolioRouteImport.update({
   id: '/comprobante/$folio',
   path: '/comprobante/$folio',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/incorporar': typeof IncorporarRoute
   '/seleccion': typeof SeleccionRoute
   '/tablero': typeof TableroRoute
+  '/tarjeta': typeof TarjetaRoute
   '/comprobante/$folio': typeof ComprobanteFolioRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/incorporar': typeof IncorporarRoute
   '/seleccion': typeof SeleccionRoute
   '/tablero': typeof TableroRoute
+  '/tarjeta': typeof TarjetaRoute
   '/comprobante/$folio': typeof ComprobanteFolioRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/incorporar': typeof IncorporarRoute
   '/seleccion': typeof SeleccionRoute
   '/tablero': typeof TableroRoute
+  '/tarjeta': typeof TarjetaRoute
   '/comprobante/$folio': typeof ComprobanteFolioRoute
 }
 export interface FileRouteTypes {
@@ -80,6 +89,7 @@ export interface FileRouteTypes {
     | '/incorporar'
     | '/seleccion'
     | '/tablero'
+    | '/tarjeta'
     | '/comprobante/$folio'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -88,6 +98,7 @@ export interface FileRouteTypes {
     | '/incorporar'
     | '/seleccion'
     | '/tablero'
+    | '/tarjeta'
     | '/comprobante/$folio'
   id:
     | '__root__'
@@ -96,6 +107,7 @@ export interface FileRouteTypes {
     | '/incorporar'
     | '/seleccion'
     | '/tablero'
+    | '/tarjeta'
     | '/comprobante/$folio'
   fileRoutesById: FileRoutesById
 }
@@ -105,6 +117,7 @@ export interface RootRouteChildren {
   IncorporarRoute: typeof IncorporarRoute
   SeleccionRoute: typeof SeleccionRoute
   TableroRoute: typeof TableroRoute
+  TarjetaRoute: typeof TarjetaRoute
   ComprobanteFolioRoute: typeof ComprobanteFolioRoute
 }
 
@@ -145,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TableroRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tarjeta': {
+      id: '/tarjeta'
+      path: '/tarjeta'
+      fullPath: '/tarjeta'
+      preLoaderRoute: typeof TarjetaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/comprobante/$folio': {
       id: '/comprobante/$folio'
       path: '/comprobante/$folio'
@@ -161,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   IncorporarRoute: IncorporarRoute,
   SeleccionRoute: SeleccionRoute,
   TableroRoute: TableroRoute,
+  TarjetaRoute: TarjetaRoute,
   ComprobanteFolioRoute: ComprobanteFolioRoute,
 }
 export const routeTree = rootRouteImport

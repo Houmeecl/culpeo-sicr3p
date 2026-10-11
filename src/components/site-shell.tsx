@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 type ShellProps = {
   children: ReactNode;
-  current?: "home" | "incorporar" | "tablero";
+  current?: "home" | "incorporar" | "tablero" | "tarjeta";
 };
 
 export function SiteShell({ children, current = "home" }: ShellProps) {
@@ -55,6 +55,15 @@ function SiteHeader({ current }: { current: ShellProps["current"] }) {
           >
             Tablero
           </Link>
+          <Link
+            to="/tarjeta"
+            className={cn(
+              "transition-colors hover:text-navy",
+              current === "tarjeta" && "font-medium text-navy",
+            )}
+          >
+            Tarjeta
+          </Link>
         </nav>
         <Link
           to="/incorporar"
@@ -74,9 +83,9 @@ function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <BrandMark invert />
         <p className="mt-6 max-w-xl text-sm leading-relaxed text-paper/70">
-          Preparar empresas locales para competir mejor, financiarse
-          responsablemente y crecer de manera sostenible. Una plataforma
-          conecta. Una institución prepara, acompaña, mide y rinde cuenta.
+          Preparar empresas locales para competir mejor, financiarse responsablemente y crecer de
+          manera sostenible. Una plataforma conecta. Una institución prepara, acompaña, mide y rinde
+          cuenta.
         </p>
         <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-paper/70">
           <Link to="/" className="hover:text-paper">
@@ -87,6 +96,9 @@ function SiteFooter() {
           </Link>
           <Link to="/tablero" className="hover:text-paper">
             Tablero de solicitudes
+          </Link>
+          <Link to="/tarjeta" className="hover:text-paper">
+            Tarjeta soportada
           </Link>
         </div>
         <p className="mt-8 text-xs uppercase tracking-[0.14em] text-paper/50">
