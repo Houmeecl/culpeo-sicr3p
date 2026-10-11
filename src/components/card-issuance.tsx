@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { FieldShell, TextField } from "@/components/form-field";
+import { AccessoriesPanel } from "@/components/accessories-panel";
 import { CardStage } from "@/components/card-stage";
 import { PayCard } from "@/components/pay-card";
 import {
@@ -31,6 +32,7 @@ import {
   type IssuedCard,
   type KycErrors,
   type KycForm,
+  type AccessoryKind,
   type RiskAssessment,
   type WalletKind,
 } from "@/lib/card-kyc";
@@ -165,6 +167,13 @@ export function CardIssuance() {
     saveCardState({ card: next, level: risk?.level ?? "bajo" });
     toast.success(`Tarjeta agregada a ${walletLabel(provisioning.kind)} (simulado)`);
     setProvisioning(null);
+  }
+
+  function orderAccessories(kinds: AccessoryKind[]) {
+    if (!card) return;
+    const next = { ...card, accessories: [...new Set([...(card.accessories ?? []), ...kinds])] };
+    setCard(next);
+    saveCardState({ card: next, level: risk?.level ?? "bajo" });
   }
 
   const inReview = step === 3 && !card && risk?.level === "alto";
@@ -354,8 +363,21 @@ export function CardIssuance() {
               onStart={startProvisioning}
               onConfirm={confirmProvisioning}
               onCancel={() => setProvisioning(null)}
-              onRestart={restart}
             />
+          ) : null}
+
+          {step === 3 && card ? (
+            <>
+              <AccessoriesPanel ordered={card.accessories ?? []} onOrder={orderAccessories} />
+              <button
+                type="button"
+                onClick={restart}
+                className="mt-5 inline-flex h-10 w-fit items-center gap-2 rounded-full px-1 text-sm font-medium text-ink-soft underline-offset-4 hover:text-navy hover:underline"
+              >
+                <RotateCcw className="size-4" />
+                Borrar demo y empezar de nuevo
+              </button>
+            </>
           ) : null}
 
           {inReview && risk ? (
@@ -571,7 +593,6 @@ function WalletPanel({
   onStart,
   onConfirm,
   onCancel,
-  onRestart,
 }: {
   card: IssuedCard;
   provisioning: { kind: WalletKind; code: string } | null;
@@ -581,7 +602,6 @@ function WalletPanel({
   onStart: (kind: WalletKind) => void;
   onConfirm: () => void;
   onCancel: () => void;
-  onRestart: () => void;
 }) {
   return (
     <div className="mt-6 flex flex-col gap-4 border-t border-line pt-6">
@@ -670,15 +690,6 @@ function WalletPanel({
           </div>
         </div>
       ) : null}
-
-      <button
-        type="button"
-        onClick={onRestart}
-        className="inline-flex h-10 w-fit items-center gap-2 rounded-full px-1 text-sm font-medium text-ink-soft underline-offset-4 hover:text-navy hover:underline"
-      >
-        <RotateCcw className="size-4" />
-        Borrar demo y empezar de nuevo
-      </button>
     </div>
   );
 }

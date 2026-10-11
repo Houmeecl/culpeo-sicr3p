@@ -150,9 +150,36 @@ export type IssuedCard = {
   holder: string;
   issuedAt: string;
   wallets: WalletKind[];
+  /** Accesorios pedidos junto con la tarjeta (opcional en estados guardados antiguos). */
+  accessories?: AccessoryKind[];
 };
 
 export type WalletKind = "apple" | "google";
+
+export type AccessoryKind = "tarjetero" | "llavero" | "charm" | "sticker";
+
+export const ACCESSORIES: { kind: AccessoryKind; name: string; detail: string }[] = [
+  {
+    kind: "tarjetero",
+    name: "Tarjetero rosa",
+    detail: "Funda mate para llevar la tarjeta en la cartera.",
+  },
+  {
+    kind: "llavero",
+    name: "Llavero de pago",
+    detail: "Paga acercando tu llavero, sin sacar la tarjeta.",
+  },
+  {
+    kind: "charm",
+    name: "Charm para cartera",
+    detail: "Colgante con el isotipo 3/ y perlas de la marca.",
+  },
+  {
+    kind: "sticker",
+    name: "Sticker de pago",
+    detail: "Adhesivo sin contacto para la funda del teléfono.",
+  },
+];
 
 /** Número de demostración: prefijo 9900 (sin red de pago) + dígito Luhn. */
 export function issueCard(holder: string): IssuedCard {
